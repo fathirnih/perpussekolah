@@ -44,10 +44,15 @@
     </style>
 </head>
 <body>
-    <form class="box" method="POST" action="#">
+    <form class="box" method="POST" action="{{ route('login.internal.post') }}">
         @csrf
         <h1>Login Internal</h1>
         <p>Khusus admin dan petugas.</p>
+        @if($errors->any())
+            <p style="margin-top:-4px; margin-bottom:12px; padding:10px; border-radius:8px; background:#fee2e2; color:#991b1b; font-size:13px;">
+                {{ $errors->first() }}
+            </p>
+        @endif
         <input type="text" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Masuk</button>
