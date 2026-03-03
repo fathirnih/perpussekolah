@@ -37,7 +37,7 @@ class InternalAuthController extends Controller
                 'email' => $petugas->email,
             ]);
 
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('petugas.dashboard');
         }
 
         return back()->withInput()->withErrors([
