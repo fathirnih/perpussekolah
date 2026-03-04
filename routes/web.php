@@ -19,45 +19,13 @@ use App\Http\Controllers\SiswaProfileController;
 use App\Http\Controllers\TamuController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function (\Illuminate\Http\Request $request, TamuController $controller) {
-    if ($request->session()->has('siswa_auth')) {
-        return redirect()->route('siswa.dashboard');
-    }
-
-    return $controller->beranda($request);
-})->name('beranda');
-
-Route::get('/katalog', function (\Illuminate\Http\Request $request, TamuController $controller) {
-    if ($request->session()->has('siswa_auth')) {
-        return redirect()->route('siswa.dashboard');
-    }
-
-    return $controller->katalog($request);
-})->name('katalog');
-
-Route::get('/informasi', function (\Illuminate\Http\Request $request, TamuController $controller) {
-    if ($request->session()->has('siswa_auth')) {
-        return redirect()->route('siswa.dashboard');
-    }
-
-    return $controller->informasi($request);
-})->name('informasi');
-
-Route::get('/kontak', function (\Illuminate\Http\Request $request, TamuController $controller) {
-    if ($request->session()->has('siswa_auth')) {
-        return redirect()->route('siswa.dashboard');
-    }
-
-    return $controller->kontak($request);
-})->name('kontak');
-
-Route::get('/login/siswa', function (\Illuminate\Http\Request $request) {
-    if ($request->session()->has('siswa_auth')) {
-        return redirect()->route('siswa.dashboard');
-    }
-
-    return view('auth.login-siswa');
-})->name('login.siswa');
+Route::middleware('siswa.redirect:siswa.dashboard')->group(function () {
+    Route::get('/', [TamuController::class, 'beranda'])->name('beranda');
+    Route::get('/katalog', [TamuController::class, 'katalog'])->name('katalog');
+    Route::get('/informasi', [TamuController::class, 'informasi'])->name('informasi');
+    Route::get('/kontak', [TamuController::class, 'kontak'])->name('kontak');
+    Route::view('/login/siswa', 'auth.login-siswa')->name('login.siswa');
+});
 Route::post('/login/siswa', [SiswaAuthController::class, 'login'])->name('login.siswa.post');
 Route::post('/keluar-siswa', [SiswaAuthController::class, 'logout'])->name('logout.siswa');
 

@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'internal.role' => \App\Http\Middleware\InternalRoleMiddleware::class,
             'siswa.auth' => \App\Http\Middleware\SiswaAuthMiddleware::class,
+            'siswa.redirect' => \App\Http\Middleware\RedirectIfSiswaAuthenticated::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
