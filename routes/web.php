@@ -14,7 +14,6 @@ use App\Http\Controllers\SiswaAuthController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\SiswaDashboardController;
 use App\Http\Controllers\SiswaPeminjamanController;
-use App\Http\Controllers\SiswaPortalController;
 use App\Http\Controllers\SiswaProfileController;
 use App\Http\Controllers\TamuController;
 use Illuminate\Support\Facades\Route;
@@ -30,10 +29,10 @@ Route::post('/login/siswa', [SiswaAuthController::class, 'login'])->name('login.
 Route::post('/keluar-siswa', [SiswaAuthController::class, 'logout'])->name('logout.siswa');
 
 Route::middleware('siswa.auth')->prefix('siswa')->name('siswa.')->group(function () {
-    Route::get('/beranda', [SiswaPortalController::class, 'beranda'])->name('beranda');
-    Route::get('/katalog', [SiswaPortalController::class, 'katalog'])->name('katalog');
-    Route::get('/informasi', [SiswaPortalController::class, 'informasi'])->name('informasi');
-    Route::get('/kontak', [SiswaPortalController::class, 'kontak'])->name('kontak');
+    Route::get('/beranda', [TamuController::class, 'beranda'])->name('beranda');
+    Route::get('/katalog', [TamuController::class, 'katalog'])->name('katalog');
+    Route::get('/informasi', [TamuController::class, 'informasi'])->name('informasi');
+    Route::get('/kontak', [TamuController::class, 'kontak'])->name('kontak');
     Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->name('dashboard');
     Route::get('/peminjaman', [SiswaPeminjamanController::class, 'indexPeminjaman'])->name('peminjaman.index');
     Route::post('/peminjaman', [SiswaPeminjamanController::class, 'storePeminjaman'])->name('peminjaman.store');

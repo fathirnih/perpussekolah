@@ -34,7 +34,9 @@
                         @if($buku->gambar_sampul)
                             <img src="{{ asset('storage/' . $buku->gambar_sampul) }}" alt="{{ $buku->judul }}" class="h-14 w-10 rounded object-cover">
                         @else
-                            <span class="text-xs text-slate-400">-</span>
+                            <div class="flex h-14 w-10 items-center justify-center rounded border border-dashed border-slate-300 bg-slate-50 text-[10px] text-slate-400">
+                                No Cover
+                            </div>
                         @endif
                     </td>
                     <td class="px-4 py-3">{{ $buku->kode_buku }}</td>

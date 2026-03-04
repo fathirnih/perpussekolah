@@ -11,50 +11,40 @@ class TamuController extends Controller
     public function beranda(Request $request)
     {
         $data = $this->ambilDataKatalog($request);
+        $config = $this->halamanConfig($request, 'beranda');
 
-        return view('tamu.beranda', $data + [
-            'layout' => 'layouts.app',
-            'title' => 'Beranda - Perpustakaan Sekolah',
-            'activeMenu' => 'beranda',
-        ]);
+        return view('tamu.beranda', $data + $config);
     }
 
     public function katalog(Request $request)
     {
         $data = $this->ambilDataKatalog($request);
+        $config = $this->halamanConfig($request, 'katalog');
 
-        return view('tamu.katalog', $data + [
-            'layout' => 'layouts.app',
-            'title' => 'Katalog - Perpustakaan Sekolah',
-            'activeMenu' => 'katalog',
-            'actionUrl' => route('katalog'),
-        ]);
+        return view('tamu.katalog', $data + $config);
     }
 
     public function informasi(Request $request)
     {
         $data = $this->ambilDataKatalog($request);
+        $config = $this->halamanConfig($request, 'informasi');
 
-        return view('tamu.informasi', $data + [
-            'layout' => 'layouts.app',
-            'title' => 'Informasi - Perpustakaan Sekolah',
-            'activeMenu' => 'informasi',
-        ]);
+        return view('tamu.informasi', $data + $config);
     }
 
-    public function kontak()
+    public function kontak(Request $request)
     {
-        return view('tamu.kontak', [
-            'layout' => 'layouts.app',
-            'title' => 'Kontak - Perpustakaan Sekolah',
-            'activeMenu' => 'kontak',
-        ]);
+        $config = $this->halamanConfig($request, 'kontak');
+
+        return view('tamu.kontak', $config);
     }
 
     private function ambilDataKatalog(Request $request): array
     {
         $q = trim((string) $request->query('q', ''));
+        $penulis = trim((string) $request->query('penulis', ''));
         $kategori = trim((string) $request->query('kategori', ''));
+        $rak = trim((string) $request->query('rak', ''));
         $status = trim((string) $request->query('status', 'semua'));
 
         $statistik = [
@@ -65,6 +55,8 @@ class TamuController extends Controller
 
         $katalog = collect();
         $daftarKategori = collect();
+        $daftarPenulis = collect();
+        $daftarRak = collect();
         $jumlahHasil = 0;
 
         if (Schema::hasTable('buku')) {
@@ -74,12 +66,28 @@ class TamuController extends Controller
                     ->pluck('nama_kategori');
             }
 
+            $daftarPenulis = DB::table('buku')
+                ->whereNotNull('penulis')
+                ->where('penulis', '!=', '')
+                ->orderBy('penulis')
+                ->distinct()
+                ->pluck('penulis');
+
+            if (Schema::hasTable('rak')) {
+                $daftarRak = DB::table('rak')
+                    ->orderBy('nomor_rak')
+                    ->pluck('nomor_rak');
+            }
+
             $katalog = DB::table('buku')
                 ->leftJoin('rak', 'rak.id', '=', 'buku.rak_id')
                 ->leftJoin('kategori_buku', 'kategori_buku.id', '=', 'buku.kategori_buku_id')
                 ->select(
+                    'buku.kode_buku',
                     'buku.judul',
                     'buku.penulis',
+                    'buku.tahun_terbit',
+                    'buku.gambar_sampul',
                     'buku.stok_tersedia',
                     'rak.nomor_rak',
                     'kategori_buku.nama_kategori'
@@ -94,6 +102,12 @@ class TamuController extends Controller
                 ->when($kategori !== '', function ($query) use ($kategori) {
                     $query->where('kategori_buku.nama_kategori', $kategori);
                 })
+                ->when($penulis !== '', function ($query) use ($penulis) {
+                    $query->where('buku.penulis', $penulis);
+                })
+                ->when($rak !== '', function ($query) use ($rak) {
+                    $query->where('rak.nomor_rak', $rak);
+                })
                 ->when($status === 'tersedia', function ($query) {
                     $query->where('buku.stok_tersedia', '>', 0);
                 })
@@ -101,10 +115,10 @@ class TamuController extends Controller
                     $query->where('buku.stok_tersedia', '<=', 0);
                 })
                 ->orderBy('buku.judul')
-                ->limit(12)
-                ->get();
+                ->paginate(9)
+                ->withQueryString();
 
-            $jumlahHasil = $katalog->count();
+            $jumlahHasil = $katalog->total();
             $statistik['total_buku'] = DB::table('buku')->count();
             $statistik['buku_tersedia'] = DB::table('buku')->where('stok_tersedia', '>', 0)->count();
 
@@ -120,6 +134,43 @@ class TamuController extends Controller
             'Pengembalian diverifikasi oleh petugas perpustakaan',
         ];
 
-        return compact('q', 'kategori', 'status', 'katalog', 'statistik', 'layanan', 'daftarKategori', 'jumlahHasil');
+        return compact('q', 'penulis', 'kategori', 'rak', 'status', 'katalog', 'statistik', 'layanan', 'daftarKategori', 'daftarPenulis', 'daftarRak', 'jumlahHasil');
+    }
+
+    private function halamanConfig(Request $request, string $menu): array
+    {
+        $isSiswa = $request->routeIs('siswa.*');
+
+        if ($isSiswa) {
+            $titles = [
+                'beranda' => 'Beranda - Siswa',
+                'katalog' => 'Katalog - Siswa',
+                'informasi' => 'Informasi - Siswa',
+                'kontak' => 'Kontak - Siswa',
+            ];
+
+            return [
+                'layout' => 'layouts.siswa',
+                'title' => $titles[$menu] ?? 'Portal Siswa',
+                'activeMenu' => $menu,
+                'actionUrl' => $menu === 'katalog' ? route('siswa.katalog') : null,
+                'showStatus' => $menu === 'katalog',
+            ];
+        }
+
+        $titles = [
+            'beranda' => 'Beranda - Perpustakaan Sekolah',
+            'katalog' => 'Katalog - Perpustakaan Sekolah',
+            'informasi' => 'Informasi - Perpustakaan Sekolah',
+            'kontak' => 'Kontak - Perpustakaan Sekolah',
+        ];
+
+        return [
+            'layout' => 'layouts.app',
+            'title' => $titles[$menu] ?? 'Perpustakaan Sekolah',
+            'activeMenu' => $menu,
+            'actionUrl' => $menu === 'katalog' ? route('katalog') : null,
+            'showStatus' => false,
+        ];
     }
 }
