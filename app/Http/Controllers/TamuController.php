@@ -116,6 +116,7 @@ class TamuController extends Controller
         $kategori = trim((string) $request->query('kategori', ''));
         $rak = trim((string) $request->query('rak', ''));
         $status = trim((string) $request->query('status', 'semua'));
+        $sort = trim((string) $request->query('sort', 'judul_asc'));
 
         $statistik = [
             'total_buku' => 0,
@@ -128,6 +129,7 @@ class TamuController extends Controller
         $daftarPenulis = collect();
         $daftarRak = collect();
         $dokumentasi = collect();
+        $topPeminjam = collect();
         $jumlahHasil = 0;
 
         if (Schema::hasTable('buku')) {
@@ -186,7 +188,20 @@ class TamuController extends Controller
                 ->when($status === 'dipinjam', function ($query) {
                     $query->where('buku.stok_tersedia', '<=', 0);
                 })
-                ->orderBy('buku.judul')
+                ->when($sort === 'judul_desc', function ($query) {
+                    $query->orderByDesc('buku.judul');
+                })
+                ->when($sort === 'tahun_desc', function ($query) {
+                    $query->orderByDesc('buku.tahun_terbit')
+                        ->orderBy('buku.judul');
+                })
+                ->when($sort === 'stok_desc', function ($query) {
+                    $query->orderByDesc('buku.stok_tersedia')
+                        ->orderBy('buku.judul');
+                })
+                ->when(! in_array($sort, ['judul_desc', 'tahun_desc', 'stok_desc'], true), function ($query) {
+                    $query->orderBy('buku.judul');
+                })
                 ->paginate(9)
                 ->withQueryString();
 
@@ -208,6 +223,39 @@ class TamuController extends Controller
                 ->get();
         }
 
+        if (
+            Schema::hasTable('peminjaman')
+            && Schema::hasTable('siswa')
+            && Schema::hasTable('detail_peminjaman')
+            && Schema::hasTable('buku')
+            && Schema::hasTable('kategori_buku')
+        ) {
+            $topPeminjam = DB::table('peminjaman')
+                ->join('siswa', 'siswa.id', '=', 'peminjaman.siswa_id')
+                ->join('detail_peminjaman', 'detail_peminjaman.peminjaman_id', '=', 'peminjaman.id')
+                ->join('buku', 'buku.id', '=', 'detail_peminjaman.buku_id')
+                ->leftJoin('kategori_buku', 'kategori_buku.id', '=', 'buku.kategori_buku_id')
+                ->where('peminjaman.status', 'selesai')
+                ->where('detail_peminjaman.status_item', 'kembali')
+                ->where(function ($query) {
+                    $query->whereNull('kategori_buku.nama_kategori')
+                        ->orWhereRaw('LOWER(kategori_buku.nama_kategori) <> ?', ['buku pelajaran']);
+                })
+                ->select(
+                    'siswa.id',
+                    'siswa.nama',
+                    'siswa.kelas',
+                    'siswa.foto_profil',
+                    DB::raw('SUM(detail_peminjaman.qty) as total_peminjaman'),
+                    DB::raw('MAX(detail_peminjaman.tanggal_kembali) as terakhir_meminjam')
+                )
+                ->groupBy('siswa.id', 'siswa.nama', 'siswa.kelas', 'siswa.foto_profil')
+                ->orderByDesc('total_peminjaman')
+                ->orderByDesc('terakhir_meminjam')
+                ->limit(3)
+                ->get();
+        }
+
         $layanan = [
             'Jam layanan Senin - Kamis: 07.00 - 16.30',
             'Jumat: 07.00 - 15.00',
@@ -221,6 +269,7 @@ class TamuController extends Controller
             'kategori',
             'rak',
             'status',
+            'sort',
             'katalog',
             'statistik',
             'layanan',
@@ -228,6 +277,7 @@ class TamuController extends Controller
             'daftarPenulis',
             'daftarRak',
             'dokumentasi',
+            'topPeminjam',
             'jumlahHasil'
         );
     }

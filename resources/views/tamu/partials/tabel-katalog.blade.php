@@ -2,71 +2,53 @@
     $showStatus = $showStatus ?? true;
 @endphp
 
-<div class="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-    @forelse(($katalog ?? []) as $item)
-        @php
-            $detailUrl = request()->routeIs('siswa.*') ? route('siswa.buku.detail', $item->id) : route('buku.detail', $item->id);
-        @endphp
-        <article class="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-            <div class="flex gap-3">
-                <div class="shrink-0">
+<section class="space-y-4">
+    <div class="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <h2 class="text-2xl font-black text-slate-900">Daftar Buku</h2>
+        <p class="text-sm text-slate-500">Halaman {{ method_exists($katalog ?? null, 'currentPage') ? $katalog->currentPage() : 1 }} dari {{ method_exists($katalog ?? null, 'lastPage') ? $katalog->lastPage() : 1 }}</p>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        @forelse(($katalog ?? []) as $item)
+            @php
+                $detailUrl = request()->routeIs('siswa.*') ? route('siswa.buku.detail', $item->id) : route('buku.detail', $item->id);
+                $stok = (int) ($item->stok_tersedia ?? 0);
+            @endphp
+            <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <a href="{{ $detailUrl }}" class="block bg-slate-100">
                     @if(!empty($item->gambar_sampul))
-                        <a href="{{ $detailUrl }}" class="block">
-                            <img
-                                src="{{ asset('storage/' . $item->gambar_sampul) }}"
-                                alt="Sampul {{ $item->judul }}"
-                                class="h-24 w-16 rounded-md border border-slate-200 object-cover"
-                            >
-                        </a>
+                        <img
+                            src="{{ asset('storage/' . $item->gambar_sampul) }}"
+                            alt="Sampul {{ $item->judul }}"
+                            class="h-64 w-full object-cover"
+                        >
                     @else
-                        <a href="{{ $detailUrl }}" class="flex h-24 w-16 items-center justify-center rounded-md border border-dashed border-slate-300 bg-slate-50 text-[10px] text-slate-400">
-                            No Cover
-                        </a>
+                        <div class="flex h-64 w-full items-center justify-center text-xs font-semibold tracking-wide text-slate-400">NO COVER</div>
                     @endif
-                </div>
-                <div class="min-w-0 flex-1">
-                    <h3 class="line-clamp-2 text-sm font-bold text-slate-800">
+                </a>
+
+                <div class="space-y-3 p-4">
+                    <h3 class="line-clamp-2 text-base font-bold leading-6 text-slate-900">
                         <a href="{{ $detailUrl }}" class="hover:text-sky-700">{{ $item->judul }}</a>
                     </h3>
-                    <p class="mt-1 text-xs text-slate-500">{{ $item->penulis ?? '-' }}</p>
-                    <p class="mt-2 text-[11px] text-slate-500">{{ $item->kode_buku ?? '-' }} | {{ $item->tahun_terbit ?? '-' }}</p>
+
+                    <div class="flex items-center justify-between border-t border-slate-100 pt-3">
+                        <a href="{{ $detailUrl }}" class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+                            Detail
+                        </a>
+                    </div>
                 </div>
+            </article>
+        @empty
+            <div class="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500 sm:col-span-2 xl:col-span-3">
+                Data buku belum tersedia atau tidak ditemukan.
             </div>
-
-            <div class="mt-3 flex flex-wrap gap-2">
-                <span class="inline-flex rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700">
-                    {{ $item->nama_kategori ?? '-' }}
-                </span>
-                <span class="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
-                    Rak: {{ $item->nomor_rak ?? '-' }}
-                </span>
-                @if($showStatus)
-                    @if(($item->stok_tersedia ?? 0) > 0)
-                        <span class="inline-flex rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Tersedia</span>
-                    @else
-                        <span class="inline-flex rounded-full bg-rose-100 px-2.5 py-1 text-xs font-semibold text-rose-700">Dipinjam</span>
-                    @endif
-                @else
-                    <span class="inline-flex rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
-                        Stok: {{ (int) ($item->stok_tersedia ?? 0) }}
-                    </span>
-                @endif
-            </div>
-            <div class="mt-4">
-                <a href="{{ $detailUrl }}" class="inline-flex items-center rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">
-                    Detail
-                </a>
-            </div>
-        </article>
-    @empty
-        <div class="rounded-xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-500 sm:col-span-2 xl:col-span-3">
-            Data buku belum tersedia atau tidak ditemukan.
-        </div>
-    @endforelse
-</div>
-
-@if(isset($katalog) && method_exists($katalog, 'links'))
-    <div class="mt-4 rounded-lg border border-slate-200 bg-white px-3 py-2">
-        {{ $katalog->onEachSide(1)->links() }}
+        @endforelse
     </div>
-@endif
+
+    @if(isset($katalog) && method_exists($katalog, 'links'))
+        <div class="rounded-lg border border-slate-200 bg-white px-3 py-2">
+            {{ $katalog->onEachSide(1)->links() }}
+        </div>
+    @endif
+</section>

@@ -22,6 +22,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'PEL-001',
                 'judul' => 'Matematika Kelas X',
+                'sinopsis' => 'Buku pelajaran Matematika untuk kelas X yang membahas konsep dasar aljabar, persamaan, fungsi, dan penerapannya dalam soal kontekstual.',
                 'penulis' => 'Tim MGMP Matematika',
                 'penerbit' => 'Pustaka Edukasi',
                 'tahun_terbit' => 2024,
@@ -33,6 +34,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'PEL-002',
                 'judul' => 'Bahasa Indonesia Kelas X',
+                'sinopsis' => 'Materi Bahasa Indonesia kelas X meliputi teks deskripsi, eksposisi, argumentasi, serta latihan literasi untuk meningkatkan kemampuan menulis dan membaca kritis.',
                 'penulis' => 'Rina Pratiwi',
                 'penerbit' => 'Nusantara Belajar',
                 'tahun_terbit' => 2023,
@@ -44,6 +46,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'REF-001',
                 'judul' => 'Kamus Besar Bahasa Indonesia Ringkas',
+                'sinopsis' => 'Kamus ringkas berisi kosakata umum bahasa Indonesia beserta makna dan contoh penggunaannya untuk membantu kegiatan belajar harian.',
                 'penulis' => 'Tim Bahasa Nasional',
                 'penerbit' => 'Bahasa Kita',
                 'tahun_terbit' => 2022,
@@ -55,6 +58,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'REF-002',
                 'judul' => 'Atlas Pelajar Indonesia dan Dunia',
+                'sinopsis' => 'Atlas pelajar yang menyajikan peta wilayah Indonesia dan dunia, lengkap dengan informasi geografis dasar untuk pendukung pelajaran IPS dan geografi.',
                 'penulis' => 'Andi Geografi',
                 'penerbit' => 'Peta Ilmu',
                 'tahun_terbit' => 2021,
@@ -66,6 +70,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'FIK-001',
                 'judul' => 'Petualangan di Ujung Senja',
+                'sinopsis' => 'Novel remaja tentang persahabatan dan keberanian menghadapi perubahan hidup melalui perjalanan ke desa pegunungan yang penuh kejutan.',
                 'penulis' => 'Dewi Laras',
                 'penerbit' => 'Bintang Remaja',
                 'tahun_terbit' => 2020,
@@ -77,6 +82,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'FIK-002',
                 'judul' => 'Komik Sains Cerdas',
+                'sinopsis' => 'Komik edukatif yang mengenalkan konsep sains sederhana melalui cerita ringan dan ilustrasi menarik agar siswa lebih mudah memahami materi.',
                 'penulis' => 'Yusuf Mahendra',
                 'penerbit' => 'Komik Edu',
                 'tahun_terbit' => 2023,
@@ -88,6 +94,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'NFK-001',
                 'judul' => 'Biografi B.J. Habibie untuk Pelajar',
+                'sinopsis' => 'Biografi tokoh inspiratif B.J. Habibie yang disusun untuk pelajar, menampilkan nilai kerja keras, disiplin, dan semangat inovasi.',
                 'penulis' => 'Rudi Hartono',
                 'penerbit' => 'Inspirasi Bangsa',
                 'tahun_terbit' => 2019,
@@ -99,6 +106,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'NFK-002',
                 'judul' => 'Sains Populer: Fenomena Sehari-hari',
+                'sinopsis' => 'Buku nonfiksi yang menjelaskan fenomena sains di sekitar kehidupan sehari-hari dengan bahasa sederhana dan contoh praktis.',
                 'penulis' => 'Aulia Sains',
                 'penerbit' => 'Cakrawala Ilmu',
                 'tahun_terbit' => 2022,
@@ -110,6 +118,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'AGM-001',
                 'judul' => 'Tafsir Ringkas Juz Amma',
+                'sinopsis' => 'Tafsir ringkas surah-surah pendek dalam Juz Amma yang membantu siswa memahami makna ayat dan penerapannya dalam kehidupan.',
                 'penulis' => 'Ust. Ahmad Ridwan',
                 'penerbit' => 'Nur Ilmu',
                 'tahun_terbit' => 2021,
@@ -121,6 +130,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'AGM-002',
                 'judul' => 'Akhlak Mulia untuk Remaja',
+                'sinopsis' => 'Buku pembinaan karakter remaja yang membahas adab, etika pergaulan, tanggung jawab, dan pembentukan kebiasaan baik di sekolah.',
                 'penulis' => 'Siti Rahma',
                 'penerbit' => 'Pena Iman',
                 'tahun_terbit' => 2020,
@@ -132,6 +142,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'MKR-001',
                 'judul' => 'Majalah Pendidikan Edisi Januari',
+                'sinopsis' => 'Majalah pendidikan berisi artikel belajar efektif, inovasi pembelajaran, dan liputan kegiatan sekolah edisi Januari.',
                 'penulis' => 'Redaksi Edukasi',
                 'penerbit' => 'Media Sekolah',
                 'tahun_terbit' => 2026,
@@ -143,6 +154,7 @@ class BukuSeeder extends Seeder
             [
                 'kode_buku' => 'MKR-002',
                 'judul' => 'Koran Harian Sekolah',
+                'sinopsis' => 'Koran harian yang memuat berita sekolah, informasi umum, dan rubrik literasi untuk mendukung budaya baca siswa.',
                 'penulis' => 'Redaksi Harian',
                 'penerbit' => 'Kabar Nusantara',
                 'tahun_terbit' => 2026,
@@ -174,6 +186,7 @@ class BukuSeeder extends Seeder
                 [
                     'isbn' => null,
                     'judul' => $buku['judul'],
+                    'sinopsis' => $buku['sinopsis'] ?? null,
                     'penulis' => $buku['penulis'],
                     'penerbit' => $buku['penerbit'],
                     'tahun_terbit' => $buku['tahun_terbit'],

@@ -15,6 +15,7 @@ class Buku extends Model
         'kode_buku',
         'isbn',
         'judul',
+        'sinopsis',
         'penulis',
         'penerbit',
         'tahun_terbit',

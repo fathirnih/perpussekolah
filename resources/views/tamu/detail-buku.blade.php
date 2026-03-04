@@ -41,6 +41,11 @@
                     <span class="font-semibold">Stok Tersedia:</span> {{ $buku->stok_tersedia }}/{{ $buku->stok_total }}
                 </div>
             </div>
+
+            <div class="mt-5 rounded-xl border border-slate-200 bg-white p-4">
+                <h2 class="text-sm font-bold uppercase tracking-wide text-slate-500">Sinopsis</h2>
+                <p class="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700">{{ $buku->sinopsis ?: 'Sinopsis buku belum tersedia.' }}</p>
+            </div>
         </div>
     </div>
 </section>

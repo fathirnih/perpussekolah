@@ -21,6 +21,7 @@
             <p><span class="font-semibold">Kode Buku:</span> {{ $buku->kode_buku }}</p>
             <p><span class="font-semibold">ISBN:</span> {{ $buku->isbn ?? '-' }}</p>
             <p><span class="font-semibold">Judul:</span> {{ $buku->judul }}</p>
+            <p><span class="font-semibold">Sinopsis:</span> {{ $buku->sinopsis ?: '-' }}</p>
             <p><span class="font-semibold">Penulis:</span> {{ $buku->penulis }}</p>
             <p><span class="font-semibold">Penerbit:</span> {{ $buku->penerbit ?? '-' }}</p>
             <p><span class="font-semibold">Tahun:</span> {{ $buku->tahun_terbit ?? '-' }}</p>

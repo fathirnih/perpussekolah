@@ -16,6 +16,10 @@
         <label class="mb-1 block text-sm font-medium">Judul</label>
         <input name="judul" value="{{ old('judul', $buku->judul ?? '') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
     </div>
+    <div class="md:col-span-2">
+        <label class="mb-1 block text-sm font-medium">Sinopsis</label>
+        <textarea name="sinopsis" rows="4" class="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Ringkasan isi buku...">{{ old('sinopsis', $buku->sinopsis ?? '') }}</textarea>
+    </div>
     <div>
         <label class="mb-1 block text-sm font-medium">Penulis</label>
         <input name="penulis" value="{{ old('penulis', $buku->penulis ?? '') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
