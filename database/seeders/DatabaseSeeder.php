@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             KategoriBukuSeeder::class,
             RakSeeder::class,
             BukuSeeder::class,
+            DokumentasiPerpusSeeder::class,
             AdminSeeder::class,
             PetugasSeeder::class,
             SiswaSeeder::class,

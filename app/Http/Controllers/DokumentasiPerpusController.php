@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DokumentasiPerpus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class DokumentasiPerpusController extends Controller
 {
@@ -37,6 +38,7 @@ class DokumentasiPerpusController extends Controller
 
         $data['is_published'] = $request->boolean('is_published');
         $data['urutan'] = (int) ($data['urutan'] ?? 0);
+        $data['slug'] = $this->generateUniqueSlug($data['judul']);
 
         if ($request->hasFile('foto')) {
             $data['foto'] = $request->file('foto')->store('dokumentasi-perpus', 'public');
@@ -65,6 +67,7 @@ class DokumentasiPerpusController extends Controller
 
         $data['is_published'] = $request->boolean('is_published');
         $data['urutan'] = (int) ($data['urutan'] ?? 0);
+        $data['slug'] = $this->generateUniqueSlug($data['judul'], $dokumentasi->id);
 
         if ($request->hasFile('foto')) {
             if ($dokumentasi->foto) {
@@ -88,5 +91,25 @@ class DokumentasiPerpusController extends Controller
         $dokumentasi->delete();
 
         return redirect()->route('admin.dokumentasi.index')->with('success', 'Dokumentasi berhasil dihapus.');
+    }
+
+    private function generateUniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($title);
+        $baseSlug = $base !== '' ? $base : 'dokumentasi';
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (
+            DokumentasiPerpus::query()
+                ->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))
+                ->where('slug', $slug)
+                ->exists()
+        ) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

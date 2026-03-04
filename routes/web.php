@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('siswa.redirect:siswa.dashboard')->group(function () {
     Route::get('/', [TamuController::class, 'beranda'])->name('beranda');
     Route::get('/galeri', [TamuController::class, 'galeri'])->name('galeri');
+    Route::get('/galeri/{dokumentasi}', [TamuController::class, 'galeriDetail'])->name('galeri.detail');
+    Route::get('/galeri-id/{dokumentasiId}', [TamuController::class, 'galeriDetailById'])->name('galeri.detail.id');
     Route::get('/katalog', [TamuController::class, 'katalog'])->name('katalog');
     Route::get('/buku/{buku}', [TamuController::class, 'detail'])->name('buku.detail');
     Route::get('/informasi', [TamuController::class, 'informasi'])->name('informasi');
@@ -34,6 +36,8 @@ Route::post('/keluar-siswa', [SiswaAuthController::class, 'logout'])->name('logo
 Route::middleware('siswa.auth')->prefix('siswa')->name('siswa.')->group(function () {
     Route::get('/beranda', [TamuController::class, 'beranda'])->name('beranda');
     Route::get('/galeri', [TamuController::class, 'galeri'])->name('galeri');
+    Route::get('/galeri/{dokumentasi}', [TamuController::class, 'galeriDetail'])->name('galeri.detail');
+    Route::get('/galeri-id/{dokumentasiId}', [TamuController::class, 'galeriDetailById'])->name('galeri.detail.id');
     Route::get('/katalog', [TamuController::class, 'katalog'])->name('katalog');
     Route::get('/buku/{buku}', [TamuController::class, 'detail'])->name('buku.detail');
     Route::get('/informasi', [TamuController::class, 'informasi'])->name('informasi');

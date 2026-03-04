@@ -30,17 +30,56 @@ class TamuController extends Controller
     {
         $config = $this->halamanConfig($request, 'galeri');
         $dokumentasiGaleri = collect();
+        $q = trim((string) $request->query('q', ''));
 
         if (Schema::hasTable('dokumentasi_perpus')) {
             $dokumentasiGaleri = DokumentasiPerpus::query()
                 ->where('is_published', true)
+                ->when($q !== '', function ($query) use ($q) {
+                    $query->where(function ($nested) use ($q) {
+                        $nested->where('judul', 'like', "%{$q}%")
+                            ->orWhere('deskripsi', 'like', "%{$q}%");
+                    });
+                })
                 ->orderByDesc('tanggal_kegiatan')
                 ->orderBy('urutan')
-                ->paginate(12)
+                ->paginate(9)
                 ->withQueryString();
         }
 
-        return view('tamu.galeri', $config + compact('dokumentasiGaleri'));
+        return view('tamu.galeri', $config + compact('dokumentasiGaleri', 'q'));
+    }
+
+    public function galeriDetail(Request $request, DokumentasiPerpus $dokumentasi)
+    {
+        if (! $dokumentasi->is_published) {
+            abort(404);
+        }
+
+        $config = $this->halamanConfig($request, 'galeri');
+        $dokumentasiLain = DokumentasiPerpus::query()
+            ->where('is_published', true)
+            ->whereKeyNot($dokumentasi->id)
+            ->orderByDesc('tanggal_kegiatan')
+            ->limit(6)
+            ->get();
+
+        return view('tamu.galeri-detail', $config + [
+            'title' => 'Galeri - ' . $dokumentasi->judul,
+            'dokumentasiItem' => $dokumentasi,
+            'dokumentasiLain' => $dokumentasiLain,
+            'galeriUrl' => $request->routeIs('siswa.*') ? route('siswa.galeri') : route('galeri'),
+        ]);
+    }
+
+    public function galeriDetailById(Request $request, int $dokumentasiId)
+    {
+        $dokumentasi = DokumentasiPerpus::query()
+            ->whereKey($dokumentasiId)
+            ->where('is_published', true)
+            ->firstOrFail();
+
+        return $this->galeriDetail($request, $dokumentasi);
     }
 
     public function informasi(Request $request)

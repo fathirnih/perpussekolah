@@ -13,6 +13,7 @@ class DokumentasiPerpus extends Model
 
     protected $fillable = [
         'judul',
+        'slug',
         'tanggal_kegiatan',
         'deskripsi',
         'foto',
@@ -24,4 +25,9 @@ class DokumentasiPerpus extends Model
         'tanggal_kegiatan' => 'date',
         'is_published' => 'boolean',
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }
