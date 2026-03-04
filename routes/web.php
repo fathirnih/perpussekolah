@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('siswa.redirect:siswa.dashboard')->group(function () {
     Route::get('/', [TamuController::class, 'beranda'])->name('beranda');
     Route::get('/katalog', [TamuController::class, 'katalog'])->name('katalog');
+    Route::get('/buku/{buku}', [TamuController::class, 'detail'])->name('buku.detail');
     Route::get('/informasi', [TamuController::class, 'informasi'])->name('informasi');
     Route::get('/kontak', [TamuController::class, 'kontak'])->name('kontak');
     Route::view('/login/siswa', 'auth.login-siswa')->name('login.siswa');
@@ -31,6 +32,7 @@ Route::post('/keluar-siswa', [SiswaAuthController::class, 'logout'])->name('logo
 Route::middleware('siswa.auth')->prefix('siswa')->name('siswa.')->group(function () {
     Route::get('/beranda', [TamuController::class, 'beranda'])->name('beranda');
     Route::get('/katalog', [TamuController::class, 'katalog'])->name('katalog');
+    Route::get('/buku/{buku}', [TamuController::class, 'detail'])->name('buku.detail');
     Route::get('/informasi', [TamuController::class, 'informasi'])->name('informasi');
     Route::get('/kontak', [TamuController::class, 'kontak'])->name('kontak');
     Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->name('dashboard');

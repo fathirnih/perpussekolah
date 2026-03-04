@@ -4,23 +4,30 @@
 
 <div class="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
     @forelse(($katalog ?? []) as $item)
+        @php
+            $detailUrl = request()->routeIs('siswa.*') ? route('siswa.buku.detail', $item->id) : route('buku.detail', $item->id);
+        @endphp
         <article class="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div class="flex gap-3">
                 <div class="shrink-0">
                     @if(!empty($item->gambar_sampul))
-                        <img
-                            src="{{ asset('storage/' . $item->gambar_sampul) }}"
-                            alt="Sampul {{ $item->judul }}"
-                            class="h-24 w-16 rounded-md border border-slate-200 object-cover"
-                        >
+                        <a href="{{ $detailUrl }}" class="block">
+                            <img
+                                src="{{ asset('storage/' . $item->gambar_sampul) }}"
+                                alt="Sampul {{ $item->judul }}"
+                                class="h-24 w-16 rounded-md border border-slate-200 object-cover"
+                            >
+                        </a>
                     @else
-                        <div class="flex h-24 w-16 items-center justify-center rounded-md border border-dashed border-slate-300 bg-slate-50 text-[10px] text-slate-400">
+                        <a href="{{ $detailUrl }}" class="flex h-24 w-16 items-center justify-center rounded-md border border-dashed border-slate-300 bg-slate-50 text-[10px] text-slate-400">
                             No Cover
-                        </div>
+                        </a>
                     @endif
                 </div>
                 <div class="min-w-0 flex-1">
-                    <h3 class="line-clamp-2 text-sm font-bold text-slate-800">{{ $item->judul }}</h3>
+                    <h3 class="line-clamp-2 text-sm font-bold text-slate-800">
+                        <a href="{{ $detailUrl }}" class="hover:text-sky-700">{{ $item->judul }}</a>
+                    </h3>
                     <p class="mt-1 text-xs text-slate-500">{{ $item->penulis ?? '-' }}</p>
                     <p class="mt-2 text-[11px] text-slate-500">{{ $item->kode_buku ?? '-' }} | {{ $item->tahun_terbit ?? '-' }}</p>
                 </div>
@@ -44,6 +51,11 @@
                         Stok: {{ (int) ($item->stok_tersedia ?? 0) }}
                     </span>
                 @endif
+            </div>
+            <div class="mt-4">
+                <a href="{{ $detailUrl }}" class="inline-flex items-center rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+                    Detail
+                </a>
             </div>
         </article>
     @empty

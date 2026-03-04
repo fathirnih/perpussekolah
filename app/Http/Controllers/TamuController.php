@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Buku;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -37,6 +38,18 @@ class TamuController extends Controller
         $config = $this->halamanConfig($request, 'kontak');
 
         return view('tamu.kontak', $config);
+    }
+
+    public function detail(Request $request, Buku $buku)
+    {
+        $config = $this->halamanConfig($request, 'katalog');
+        $buku->load(['kategori', 'rak']);
+
+        return view('tamu.detail-buku', $config + [
+            'title' => 'Detail Buku - ' . $buku->judul,
+            'buku' => $buku,
+            'kembaliUrl' => $request->routeIs('siswa.*') ? route('siswa.katalog') : route('katalog'),
+        ]);
     }
 
     private function ambilDataKatalog(Request $request): array
@@ -83,6 +96,7 @@ class TamuController extends Controller
                 ->leftJoin('rak', 'rak.id', '=', 'buku.rak_id')
                 ->leftJoin('kategori_buku', 'kategori_buku.id', '=', 'buku.kategori_buku_id')
                 ->select(
+                    'buku.id',
                     'buku.kode_buku',
                     'buku.judul',
                     'buku.penulis',
