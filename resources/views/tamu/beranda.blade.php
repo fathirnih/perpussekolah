@@ -1,9 +1,5 @@
-@extends('layouts.app', ['title' => 'Beranda - Perpustakaan Sekolah'])
+@extends($layout ?? 'layouts.app', ['title' => $title ?? 'Beranda - Perpustakaan Sekolah', 'activeMenu' => $activeMenu ?? null])
 
 @section('content')
-<section class="grid gap-6 md:grid-cols-[1.2fr_0.8fr]">
-    @include('tamu.partials.hero')
-</section>
-
-@include('tamu.partials.statistik')
+@include('partials.beranda-content')
 @endsection

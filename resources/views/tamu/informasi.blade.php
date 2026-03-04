@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Informasi - Perpustakaan Sekolah'])
+@extends($layout ?? 'layouts.app', ['title' => $title ?? 'Informasi - Perpustakaan Sekolah', 'activeMenu' => $activeMenu ?? null])
 
 @section('content')
 <section class="rounded-2xl border border-sky-100 bg-white p-6 shadow-sm md:p-8">

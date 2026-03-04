@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Kontak - Perpustakaan Sekolah'])
+@extends($layout ?? 'layouts.app', ['title' => $title ?? 'Kontak - Perpustakaan Sekolah', 'activeMenu' => $activeMenu ?? null])
 
 @section('content')
 <section class="rounded-2xl border border-sky-100 bg-white p-6 shadow-sm md:p-8">
@@ -8,7 +8,7 @@
     <div class="mt-6 grid gap-4 md:grid-cols-2">
         <article class="rounded-xl border border-slate-200 p-4">
             <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Alamat</h2>
-            <p class="mt-2 text-sm text-slate-700">Perpustakaan Sekolah<br>Jl. Pendidikan No. 1</p>
+            <p class="mt-2 text-sm text-slate-700">Perpustakaan Sekolah<br>Jalan Syekh Ibrahim Musa No.mor 26, Ganting, Padang Panjang Timur, Padang Panjang City, West Sumatra</p>
         </article>
         <article class="rounded-xl border border-slate-200 p-4">
             <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Kontak</h2>

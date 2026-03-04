@@ -12,26 +12,43 @@ class TamuController extends Controller
     {
         $data = $this->ambilDataKatalog($request);
 
-        return view('tamu.beranda', $data + ['activeMenu' => 'beranda']);
+        return view('tamu.beranda', $data + [
+            'layout' => 'layouts.app',
+            'title' => 'Beranda - Perpustakaan Sekolah',
+            'activeMenu' => 'beranda',
+        ]);
     }
 
     public function katalog(Request $request)
     {
         $data = $this->ambilDataKatalog($request);
 
-        return view('tamu.katalog', $data + ['activeMenu' => 'katalog']);
+        return view('tamu.katalog', $data + [
+            'layout' => 'layouts.app',
+            'title' => 'Katalog - Perpustakaan Sekolah',
+            'activeMenu' => 'katalog',
+            'actionUrl' => route('katalog'),
+        ]);
     }
 
     public function informasi(Request $request)
     {
         $data = $this->ambilDataKatalog($request);
 
-        return view('tamu.informasi', $data + ['activeMenu' => 'informasi']);
+        return view('tamu.informasi', $data + [
+            'layout' => 'layouts.app',
+            'title' => 'Informasi - Perpustakaan Sekolah',
+            'activeMenu' => 'informasi',
+        ]);
     }
 
     public function kontak()
     {
-        return view('tamu.kontak', ['activeMenu' => 'kontak']);
+        return view('tamu.kontak', [
+            'layout' => 'layouts.app',
+            'title' => 'Kontak - Perpustakaan Sekolah',
+            'activeMenu' => 'kontak',
+        ]);
     }
 
     private function ambilDataKatalog(Request $request): array
@@ -97,7 +114,8 @@ class TamuController extends Controller
         }
 
         $layanan = [
-            'Jam buka Senin - Jumat: 07.00 - 15.00',
+            'Jam layanan Senin - Kamis: 07.00 - 16.30',
+            'Jumat: 07.00 - 15.00',
             'Maksimal pinjam mengikuti kebijakan sekolah',
             'Pengembalian diverifikasi oleh petugas perpustakaan',
         ];

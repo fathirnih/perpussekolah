@@ -1,9 +1,5 @@
-@extends('layouts.siswa', ['title' => 'Beranda - Siswa', 'activeMenu' => 'beranda'])
-
-@section('content')
 <section class="grid gap-6 md:grid-cols-[1.2fr_0.8fr]">
     @include('tamu.partials.hero')
 </section>
 
 @include('tamu.partials.statistik')
-@endsection
