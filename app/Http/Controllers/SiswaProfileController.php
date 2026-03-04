@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kelas;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,9 +12,8 @@ class SiswaProfileController extends Controller
     {
         $auth = $request->session()->get('siswa_auth');
         $siswa = Siswa::with('kelas')->findOrFail($auth['id']);
-        $daftarKelas = Kelas::query()->orderBy('nama_kelas')->get(['id', 'nama_kelas']);
 
-        return view('siswa.profil', compact('siswa', 'auth', 'daftarKelas'));
+        return view('siswa.profil', compact('siswa', 'auth'));
     }
 
     public function update(Request $request)
@@ -24,8 +22,6 @@ class SiswaProfileController extends Controller
         $siswa = Siswa::findOrFail($auth['id']);
 
         $data = $request->validate([
-            'nama' => ['required', 'string', 'max:255'],
-            'kelas_id' => ['required', 'integer', 'exists:kelas,id'],
             'email' => ['nullable', 'email', 'max:255', 'unique:siswa,email,' . $siswa->id],
             'no_hp' => ['nullable', 'string', 'max:25'],
             'alamat' => ['nullable', 'string'],

@@ -27,15 +27,13 @@
 
         <div class="grid gap-4 md:grid-cols-2">
             <div><label class="mb-1 block text-sm font-medium">NISN</label><input value="{{ $siswa->nisn }}" class="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2" disabled></div>
-            <div><label class="mb-1 block text-sm font-medium">Nama</label><input name="nama" value="{{ old('nama', $siswa->nama) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2" required></div>
+            <div>
+                <label class="mb-1 block text-sm font-medium">Nama</label>
+                <input value="{{ $siswa->nama }}" class="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2" disabled>
+            </div>
             <div>
                 <label class="mb-1 block text-sm font-medium">Kelas</label>
-                <select name="kelas_id" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
-                    <option value="">Pilih kelas</option>
-                    @foreach(($daftarKelas ?? []) as $kelas)
-                        <option value="{{ $kelas->id }}" @selected((string) old('kelas_id', $siswa->kelas_id) === (string) $kelas->id)>{{ $kelas->nama_kelas }}</option>
-                    @endforeach
-                </select>
+                <input value="{{ $siswa->kelas->nama_kelas ?? '-' }}" class="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2" disabled>
             </div>
             <div><label class="mb-1 block text-sm font-medium">Email</label><input type="email" name="email" value="{{ old('email', $siswa->email) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2"></div>
             <div><label class="mb-1 block text-sm font-medium">No HP</label><input name="no_hp" value="{{ old('no_hp', $siswa->no_hp) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2"></div>
