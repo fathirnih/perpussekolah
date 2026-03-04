@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminPeminjamanController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\DokumentasiPerpusController;
@@ -68,6 +69,13 @@ Route::middleware('internal.role:admin')->group(function () {
     Route::resource('/admin/kategori-buku', KategoriBukuController::class)->except(['show'])->names('admin.kategori');
     Route::resource('/admin/rak', RakController::class)->except(['show'])->names('admin.rak');
     Route::resource('/admin/buku', BukuController::class)->names('admin.buku');
+    Route::get('/admin/peminjaman', [AdminPeminjamanController::class, 'index'])->name('admin.peminjaman.index');
+    Route::get('/admin/peminjaman/create', [AdminPeminjamanController::class, 'create'])->name('admin.peminjaman.create');
+    Route::post('/admin/peminjaman', [AdminPeminjamanController::class, 'store'])->name('admin.peminjaman.store');
+    Route::get('/admin/peminjaman/{peminjaman}', [AdminPeminjamanController::class, 'show'])->name('admin.peminjaman.show');
+    Route::get('/admin/peminjaman/{peminjaman}/edit', [AdminPeminjamanController::class, 'edit'])->name('admin.peminjaman.edit');
+    Route::put('/admin/peminjaman/{peminjaman}', [AdminPeminjamanController::class, 'update'])->name('admin.peminjaman.update');
+    Route::delete('/admin/peminjaman/{peminjaman}', [AdminPeminjamanController::class, 'destroy'])->name('admin.peminjaman.destroy');
     Route::resource('/admin/dokumentasi', DokumentasiPerpusController::class)
         ->except(['show'])
         ->parameters(['dokumentasi' => 'dokumentasi'])
