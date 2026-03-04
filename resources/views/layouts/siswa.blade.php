@@ -37,8 +37,8 @@
 <body class="bg-slate-50 text-slate-800">
     <aside id="siswaSidebar" class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col border-r border-slate-200 bg-white transition-all duration-300 lg:translate-x-0">
         <div class="flex h-16 items-center border-b border-slate-200 px-4">
-            <span class="text-xl font-black text-sky-700">SW</span>
-            <span class="brand-text ml-2 text-sm font-bold text-slate-800">Menu Siswa</span>
+            @include('partials.logo-sekolah', ['size' => 'h-9 w-9', 'rounded' => 'rounded-lg'])
+            <span class="brand-text ml-2 text-sm font-bold text-slate-800">Siswa SMKN 2</span>
         </div>
 
         <nav class="space-y-1 p-3">

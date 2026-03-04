@@ -22,7 +22,13 @@
                     Menu
                 </button>
             @endif
-            <div class="text-lg font-bold text-sky-900">Perpustakaan Sekolah</div>
+            <div class="flex items-center gap-2">
+                @include('partials.logo-sekolah', ['size' => 'h-9 w-9', 'rounded' => 'rounded-lg'])
+                <div>
+                    <div class="text-sm font-black leading-tight text-sky-900">SMK Negeri 2 Padang Panjang</div>
+                    <div class="text-xs leading-tight text-slate-500">Perpustakaan Sekolah</div>
+                </div>
+            </div>
         </div>
 
         @if($showNavLinks)
