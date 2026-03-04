@@ -84,6 +84,7 @@ class PetugasPeminjamanController extends Controller
 
             $peminjaman->update([
                 'status' => 'selesai',
+                'pengajuan_pengembalian' => false,
                 'petugas_id' => $auth['tipe'] === 'petugas' ? ($auth['id'] ?? null) : $peminjaman->petugas_id,
             ]);
         });

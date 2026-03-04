@@ -44,14 +44,19 @@
     </style>
 </head>
 <body>
-    <form class="box" method="POST" action="#">
+    <form class="box" method="POST" action="{{ route('login.siswa.post') }}">
         @csrf
         <h1>Login Siswa</h1>
         <p>Gunakan akun yang sudah dibuatkan oleh admin sekolah.</p>
+        @if($errors->any())
+            <p style="margin-top:-4px; margin-bottom:12px; padding:10px; border-radius:8px; background:#fee2e2; color:#991b1b; font-size:13px;">
+                {{ $errors->first() }}
+            </p>
+        @endif
         <p style="margin-top:-8px; margin-bottom:16px; padding:10px 12px; border-radius:10px; background:#fff7d6; color:#6b4f00; font-size:13px;">
             Password default siswa adalah <strong>password</strong>. Silakan ganti setelah berhasil login.
         </p>
-        <input type="text" name="nisn" placeholder="NISN atau Email" required>
+        <input type="text" name="identifier" placeholder="NISN atau Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Masuk</button>
         <a href="{{ url('/') }}">Kembali ke beranda</a>

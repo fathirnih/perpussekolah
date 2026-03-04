@@ -21,6 +21,7 @@ class Siswa extends Authenticatable
         'is_registered',
         'no_hp',
         'alamat',
+        'foto_profil',
     ];
 
     protected $hidden = [

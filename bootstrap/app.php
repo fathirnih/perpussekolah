@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'internal.role' => \App\Http\Middleware\InternalRoleMiddleware::class,
+            'siswa.auth' => \App\Http\Middleware\SiswaAuthMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

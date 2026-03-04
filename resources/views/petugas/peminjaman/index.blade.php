@@ -20,7 +20,7 @@
 
 <div class="overflow-x-auto rounded-xl border bg-white">
     <table class="min-w-full text-sm">
-        <thead class="bg-slate-50"><tr><th class="px-4 py-3 text-left">Kode</th><th class="px-4 py-3 text-left">Siswa</th><th class="px-4 py-3 text-left">Buku</th><th class="px-4 py-3 text-left">Status</th><th class="px-4 py-3 text-left">Aksi</th></tr></thead>
+        <thead class="bg-slate-50"><tr><th class="px-4 py-3 text-left">Kode</th><th class="px-4 py-3 text-left">Siswa</th><th class="px-4 py-3 text-left">Buku</th><th class="px-4 py-3 text-left">Status</th><th class="px-4 py-3 text-left">Pengajuan Kembali</th><th class="px-4 py-3 text-left">Aksi</th></tr></thead>
         <tbody>
         @forelse($daftarPeminjaman as $item)
             <tr class="border-t align-top">
@@ -34,6 +34,13 @@
                     </ul>
                 </td>
                 <td class="px-4 py-3">{{ ucfirst($item->status) }}</td>
+                <td class="px-4 py-3">
+                    @if($item->pengajuan_pengembalian)
+                        <span class="inline-flex rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">Ya</span>
+                    @else
+                        <span class="text-slate-400">-</span>
+                    @endif
+                </td>
                 <td class="px-4 py-3">
                     <div class="flex flex-wrap gap-2">
                         @if($item->status === 'menunggu')
@@ -52,7 +59,7 @@
                 </td>
             </tr>
         @empty
-            <tr><td class="px-4 py-6 text-center text-slate-500" colspan="5">Tidak ada data peminjaman.</td></tr>
+            <tr><td class="px-4 py-6 text-center text-slate-500" colspan="6">Tidak ada data peminjaman.</td></tr>
         @endforelse
         </tbody>
     </table>
