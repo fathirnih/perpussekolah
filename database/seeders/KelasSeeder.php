@@ -12,21 +12,35 @@ class KelasSeeder extends Seeder
      */
     public function run(): void
     {
-        $daftarKelas = [
-            'X RPL 1',
-            'X RPL 2',
-            'X TKJ 1',
-            'XI RPL 1',
-            'XI TKJ 1',
-            'XII RPL 1',
-        ];
+        $tingkat = ['X', 'XI', 'XII'];
+        $basis = ['RPL 1', 'RPL 2', 'TKJ 1', 'TKJ 2', 'DKV 1', 'DKV 2', 'DKV 3', 'PSPT'];
+
+        $daftarKelas = [];
+        foreach ($tingkat as $level) {
+            foreach ($basis as $nama) {
+                $daftarKelas[] = $level . ' ' . $nama;
+            }
+        }
 
         foreach ($daftarKelas as $namaKelas) {
-            Kelas::updateOrCreate(
+            Kelas::query()->updateOrCreate(
                 ['nama_kelas' => $namaKelas],
                 ['nama_kelas' => $namaKelas]
             );
         }
+
+        $kelasValid = Kelas::query()->whereIn('nama_kelas', $daftarKelas)->pluck('id');
+        $kelasDefaultId = Kelas::query()->where('nama_kelas', 'X RPL 1')->value('id');
+
+        if ($kelasDefaultId) {
+            \App\Models\Siswa::query()
+                ->where(function ($query) use ($kelasValid) {
+                    $query->whereNull('kelas_id')
+                        ->orWhereNotIn('kelas_id', $kelasValid);
+                })
+                ->update(['kelas_id' => $kelasDefaultId]);
+        }
+
+        Kelas::query()->whereNotIn('nama_kelas', $daftarKelas)->delete();
     }
 }
-
