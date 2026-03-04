@@ -5,14 +5,39 @@ namespace App\Http\Controllers;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SiswaController extends Controller
 {
     public function index()
     {
-        $daftarSiswa = Siswa::with('kelas')->latest()->get();
+        $q = trim((string) request()->query('q', ''));
+        $kelasId = trim((string) request()->query('kelas_id', ''));
 
-        return view('admin.siswa.index', compact('daftarSiswa'));
+        $daftarKelas = Kelas::query()->orderBy('nama_kelas')->get(['id', 'nama_kelas']);
+
+        $daftarSiswa = Siswa::with('kelas')
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($nested) use ($q) {
+                    $nested->where('nama', 'like', "%{$q}%")
+                        ->orWhere('nisn', 'like', "%{$q}%");
+                });
+            })
+            ->when($kelasId !== '', function ($query) use ($kelasId) {
+                $query->where('kelas_id', $kelasId);
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.siswa.index', compact('daftarSiswa', 'q', 'kelasId', 'daftarKelas'));
+    }
+
+    public function show(Siswa $siswa)
+    {
+        $siswa->load('kelas');
+
+        return view('admin.siswa.show', compact('siswa'));
     }
 
     public function create()
@@ -30,12 +55,15 @@ class SiswaController extends Controller
             'kelas_id' => ['required', 'integer', 'exists:kelas,id'],
             'email' => ['nullable', 'email', 'max:255', 'unique:siswa,email'],
             'password' => ['nullable', 'string', 'min:6'],
-            'is_registered' => ['nullable', 'boolean'],
             'no_hp' => ['nullable', 'string', 'max:25'],
             'alamat' => ['nullable', 'string'],
+            'foto_profil' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        $data['is_registered'] = (bool) ($data['is_registered'] ?? false);
+        if ($request->hasFile('foto_profil')) {
+            $data['foto_profil'] = $request->file('foto_profil')->store('siswa', 'public');
+        }
+
         Siswa::create($data);
 
         return redirect()->route('admin.siswa.index')->with('success', 'Siswa berhasil ditambahkan.');
@@ -56,14 +84,19 @@ class SiswaController extends Controller
             'kelas_id' => ['required', 'integer', 'exists:kelas,id'],
             'email' => ['nullable', 'email', 'max:255', 'unique:siswa,email,' . $siswa->id],
             'password' => ['nullable', 'string', 'min:6'],
-            'is_registered' => ['nullable', 'boolean'],
             'no_hp' => ['nullable', 'string', 'max:25'],
             'alamat' => ['nullable', 'string'],
+            'foto_profil' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        $data['is_registered'] = (bool) ($data['is_registered'] ?? false);
         if (blank($data['password'] ?? null)) {
             unset($data['password']);
+        }
+        if ($request->hasFile('foto_profil')) {
+            if ($siswa->foto_profil) {
+                Storage::disk('public')->delete($siswa->foto_profil);
+            }
+            $data['foto_profil'] = $request->file('foto_profil')->store('siswa', 'public');
         }
 
         $siswa->update($data);

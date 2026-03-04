@@ -66,7 +66,7 @@ Route::middleware('internal.role:admin')->group(function () {
         ->except(['show'])
         ->parameters(['petugas' => 'petugas'])
         ->names('admin.petugas');
-    Route::resource('/admin/siswa', SiswaController::class)->except(['show'])->names('admin.siswa');
+    Route::resource('/admin/siswa', SiswaController::class)->names('admin.siswa');
     Route::resource('/admin/kelas', KelasController::class)->except(['show'])->names('admin.kelas');
     Route::resource('/admin/kategori-buku', KategoriBukuController::class)->except(['show'])->names('admin.kategori');
     Route::resource('/admin/rak', RakController::class)->except(['show'])->names('admin.rak');
