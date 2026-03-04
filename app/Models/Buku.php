@@ -18,6 +18,7 @@ class Buku extends Model
         'penulis',
         'penerbit',
         'tahun_terbit',
+        'gambar_sampul',
         'kategori_buku_id',
         'rak_id',
         'stok_total',

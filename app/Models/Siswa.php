@@ -21,6 +21,7 @@ class Siswa extends Authenticatable
         'is_registered',
         'no_hp',
         'alamat',
+        'foto_profil',
     ];
 
     protected $hidden = [
@@ -34,6 +35,15 @@ class Siswa extends Authenticatable
             'is_registered' => 'boolean',
             'password' => 'hashed',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $siswa): void {
+            if (blank($siswa->password)) {
+                $siswa->password = 'password';
+            }
+        });
     }
 
     public function peminjaman()

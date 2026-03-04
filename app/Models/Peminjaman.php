@@ -19,6 +19,7 @@ class Peminjaman extends Model
         'tanggal_jatuh_tempo',
         'status',
         'catatan',
+        'pengajuan_pengembalian',
     ];
 
     protected function casts(): array
@@ -26,6 +27,7 @@ class Peminjaman extends Model
         return [
             'tanggal_pinjam' => 'date',
             'tanggal_jatuh_tempo' => 'date',
+            'pengajuan_pengembalian' => 'boolean',
         ];
     }
 
