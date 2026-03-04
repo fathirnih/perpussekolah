@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\DokumentasiPerpus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -23,6 +24,23 @@ class TamuController extends Controller
         $config = $this->halamanConfig($request, 'katalog');
 
         return view('tamu.katalog', $data + $config);
+    }
+
+    public function galeri(Request $request)
+    {
+        $config = $this->halamanConfig($request, 'galeri');
+        $dokumentasiGaleri = collect();
+
+        if (Schema::hasTable('dokumentasi_perpus')) {
+            $dokumentasiGaleri = DokumentasiPerpus::query()
+                ->where('is_published', true)
+                ->orderByDesc('tanggal_kegiatan')
+                ->orderBy('urutan')
+                ->paginate(12)
+                ->withQueryString();
+        }
+
+        return view('tamu.galeri', $config + compact('dokumentasiGaleri'));
     }
 
     public function informasi(Request $request)
@@ -70,6 +88,7 @@ class TamuController extends Controller
         $daftarKategori = collect();
         $daftarPenulis = collect();
         $daftarRak = collect();
+        $dokumentasi = collect();
         $jumlahHasil = 0;
 
         if (Schema::hasTable('buku')) {
@@ -141,6 +160,15 @@ class TamuController extends Controller
             }
         }
 
+        if (Schema::hasTable('dokumentasi_perpus')) {
+            $dokumentasi = DokumentasiPerpus::query()
+                ->where('is_published', true)
+                ->orderByDesc('tanggal_kegiatan')
+                ->orderBy('urutan')
+                ->limit(9)
+                ->get();
+        }
+
         $layanan = [
             'Jam layanan Senin - Kamis: 07.00 - 16.30',
             'Jumat: 07.00 - 15.00',
@@ -148,7 +176,21 @@ class TamuController extends Controller
             'Pengembalian diverifikasi oleh petugas perpustakaan',
         ];
 
-        return compact('q', 'penulis', 'kategori', 'rak', 'status', 'katalog', 'statistik', 'layanan', 'daftarKategori', 'daftarPenulis', 'daftarRak', 'jumlahHasil');
+        return compact(
+            'q',
+            'penulis',
+            'kategori',
+            'rak',
+            'status',
+            'katalog',
+            'statistik',
+            'layanan',
+            'daftarKategori',
+            'daftarPenulis',
+            'daftarRak',
+            'dokumentasi',
+            'jumlahHasil'
+        );
     }
 
     private function halamanConfig(Request $request, string $menu): array
@@ -158,6 +200,7 @@ class TamuController extends Controller
         if ($isSiswa) {
             $titles = [
                 'beranda' => 'Beranda - Siswa',
+                'galeri' => 'Galeri - Siswa',
                 'katalog' => 'Katalog - Siswa',
                 'informasi' => 'Informasi - Siswa',
                 'kontak' => 'Kontak - Siswa',
@@ -174,6 +217,7 @@ class TamuController extends Controller
 
         $titles = [
             'beranda' => 'Beranda - Perpustakaan Sekolah',
+            'galeri' => 'Galeri - Perpustakaan Sekolah',
             'katalog' => 'Katalog - Perpustakaan Sekolah',
             'informasi' => 'Informasi - Perpustakaan Sekolah',
             'kontak' => 'Kontak - Perpustakaan Sekolah',

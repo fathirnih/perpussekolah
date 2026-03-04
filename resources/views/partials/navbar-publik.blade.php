@@ -8,6 +8,7 @@
     $containerClass = $containerClass ?? 'mx-auto w-[min(1120px,92%)]';
     $navLinks = $navLinks ?? [
         ['label' => 'Beranda', 'href' => route('beranda'), 'active' => $active === 'beranda'],
+        ['label' => 'Galeri', 'href' => route('galeri'), 'active' => $active === 'galeri'],
         ['label' => 'Katalog', 'href' => route('katalog'), 'active' => $active === 'katalog'],
         ['label' => 'Informasi', 'href' => route('informasi'), 'active' => $active === 'informasi'],
         ['label' => 'Kontak', 'href' => route('kontak'), 'active' => $active === 'kontak'],

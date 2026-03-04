@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BukuController;
+use App\Http\Controllers\DokumentasiPerpusController;
 use App\Http\Controllers\InternalAuthController;
 use App\Http\Controllers\KategoriBukuController;
 use App\Http\Controllers\PetugasController;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('siswa.redirect:siswa.dashboard')->group(function () {
     Route::get('/', [TamuController::class, 'beranda'])->name('beranda');
+    Route::get('/galeri', [TamuController::class, 'galeri'])->name('galeri');
     Route::get('/katalog', [TamuController::class, 'katalog'])->name('katalog');
     Route::get('/buku/{buku}', [TamuController::class, 'detail'])->name('buku.detail');
     Route::get('/informasi', [TamuController::class, 'informasi'])->name('informasi');
@@ -31,6 +33,7 @@ Route::post('/keluar-siswa', [SiswaAuthController::class, 'logout'])->name('logo
 
 Route::middleware('siswa.auth')->prefix('siswa')->name('siswa.')->group(function () {
     Route::get('/beranda', [TamuController::class, 'beranda'])->name('beranda');
+    Route::get('/galeri', [TamuController::class, 'galeri'])->name('galeri');
     Route::get('/katalog', [TamuController::class, 'katalog'])->name('katalog');
     Route::get('/buku/{buku}', [TamuController::class, 'detail'])->name('buku.detail');
     Route::get('/informasi', [TamuController::class, 'informasi'])->name('informasi');
@@ -61,6 +64,10 @@ Route::middleware('internal.role:admin')->group(function () {
     Route::resource('/admin/kategori-buku', KategoriBukuController::class)->except(['show'])->names('admin.kategori');
     Route::resource('/admin/rak', RakController::class)->except(['show'])->names('admin.rak');
     Route::resource('/admin/buku', BukuController::class)->names('admin.buku');
+    Route::resource('/admin/dokumentasi', DokumentasiPerpusController::class)
+        ->except(['show'])
+        ->parameters(['dokumentasi' => 'dokumentasi'])
+        ->names('admin.dokumentasi');
 });
 
 Route::middleware('internal.role:petugas,admin')->prefix('petugas')->name('petugas.')->group(function () {

@@ -49,6 +49,7 @@
             <a href="{{ route('admin.kategori.index') }}" class="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.kategori.*') ? 'bg-sky-50 text-sky-700' : 'text-slate-700 hover:bg-slate-100' }}"><span class="menu-icon">K</span><span class="sidebar-label">Kategori</span></a>
             <a href="{{ route('admin.rak.index') }}" class="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.rak.*') ? 'bg-sky-50 text-sky-700' : 'text-slate-700 hover:bg-slate-100' }}"><span class="menu-icon">R</span><span class="sidebar-label">Rak</span></a>
             <a href="{{ route('admin.buku.index') }}" class="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.buku.*') ? 'bg-sky-50 text-sky-700' : 'text-slate-700 hover:bg-slate-100' }}"><span class="menu-icon">B</span><span class="sidebar-label">Data Buku</span></a>
+            <a href="{{ route('admin.dokumentasi.index') }}" class="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.dokumentasi.*') ? 'bg-sky-50 text-sky-700' : 'text-slate-700 hover:bg-slate-100' }}"><span class="menu-icon">D</span><span class="sidebar-label">Dokumentasi</span></a>
         </nav>
 
         <div class="mt-auto space-y-2 border-t border-slate-200 p-3">

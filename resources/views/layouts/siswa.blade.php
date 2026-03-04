@@ -87,6 +87,7 @@
             'containerClass' => 'w-full px-4 lg:px-6',
             'navLinks' => [
                 ['label' => 'Beranda', 'href' => route('siswa.beranda'), 'active' => ($activeMenu ?? '') === 'beranda'],
+                ['label' => 'Galeri', 'href' => route('siswa.galeri'), 'active' => ($activeMenu ?? '') === 'galeri'],
                 ['label' => 'Katalog', 'href' => route('siswa.katalog'), 'active' => ($activeMenu ?? '') === 'katalog'],
                 ['label' => 'Informasi', 'href' => route('siswa.informasi'), 'active' => ($activeMenu ?? '') === 'informasi'],
                 ['label' => 'Kontak', 'href' => route('siswa.kontak'), 'active' => ($activeMenu ?? '') === 'kontak'],
