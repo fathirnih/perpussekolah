@@ -24,6 +24,43 @@
 
 <div class="grid gap-5 lg:grid-cols-[1.1fr_1fr]">
     <section class="rounded-xl border bg-white p-5">
+        <div class="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-3">
+            <form method="GET" action="{{ route('siswa.peminjaman.index') }}" class="grid gap-2 md:grid-cols-[1.2fr_1fr_1fr_auto_auto]">
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ $q ?? '' }}"
+                    placeholder="Cari judul, penulis, atau kode buku"
+                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                >
+                <select name="kategori" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                    <option value="">Semua Kategori</option>
+                    @foreach($daftarKategori as $kategori)
+                        <option value="{{ $kategori->id }}" @selected((string) ($kategoriId ?? '') === (string) $kategori->id)>
+                            {{ $kategori->nama_kategori }}
+                        </option>
+                    @endforeach
+                </select>
+                <select name="rak" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                    <option value="">Semua Rak</option>
+                    @foreach($daftarRak as $rak)
+                        <option value="{{ $rak->id }}" @selected((string) ($rakId ?? '') === (string) $rak->id)>
+                            {{ $rak->nomor_rak }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="submit" class="rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-800">
+                    Filter
+                </button>
+                <a href="{{ route('siswa.peminjaman.index') }}" class="rounded-lg border border-slate-300 px-4 py-2 text-center text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                    Reset
+                </a>
+            </form>
+            <p class="mt-2 text-xs text-slate-600">
+                Menampilkan {{ $daftarBuku->count() }} buku untuk dipilih.
+            </p>
+        </div>
+
         <h3 class="mb-4 text-lg font-semibold">Form Peminjaman</h3>
         <form method="POST" action="{{ route('siswa.peminjaman.store') }}" class="space-y-4">
             @csrf

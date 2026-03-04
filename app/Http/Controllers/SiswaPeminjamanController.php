@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Buku;
 use App\Models\DetailPeminjaman;
+use App\Models\KategoriBuku;
 use App\Models\Peminjaman;
+use App\Models\Rak;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,11 +15,35 @@ class SiswaPeminjamanController extends Controller
     public function indexPeminjaman(Request $request)
     {
         $siswaId = $this->siswaId($request);
+        $q = trim((string) $request->query('q', ''));
+        $kategoriId = trim((string) $request->query('kategori', ''));
+        $rakId = trim((string) $request->query('rak', ''));
 
         $daftarBuku = Buku::query()
             ->with(['kategori', 'rak'])
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($nested) use ($q) {
+                    $nested->where('judul', 'like', "%{$q}%")
+                        ->orWhere('penulis', 'like', "%{$q}%")
+                        ->orWhere('kode_buku', 'like', "%{$q}%");
+                });
+            })
+            ->when($kategoriId !== '', function ($query) use ($kategoriId) {
+                $query->where('kategori_buku_id', $kategoriId);
+            })
+            ->when($rakId !== '', function ($query) use ($rakId) {
+                $query->where('rak_id', $rakId);
+            })
             ->orderBy('judul')
             ->get();
+
+        $daftarKategori = KategoriBuku::query()
+            ->orderBy('nama_kategori')
+            ->get(['id', 'nama_kategori']);
+
+        $daftarRak = Rak::query()
+            ->orderBy('nomor_rak')
+            ->get(['id', 'nomor_rak']);
 
         $riwayat = Peminjaman::with('detailPeminjaman.buku')
             ->where('siswa_id', $siswaId)
@@ -25,7 +51,15 @@ class SiswaPeminjamanController extends Controller
             ->paginate(8)
             ->withQueryString();
 
-        return view('siswa.peminjaman.index', compact('daftarBuku', 'riwayat'));
+        return view('siswa.peminjaman.index', compact(
+            'daftarBuku',
+            'riwayat',
+            'q',
+            'kategoriId',
+            'rakId',
+            'daftarKategori',
+            'daftarRak'
+        ));
     }
 
     public function storePeminjaman(Request $request)
