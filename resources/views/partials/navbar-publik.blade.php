@@ -41,7 +41,7 @@
 
         @if($showLoginButton)
             <a href="{{ route('login.siswa') }}" class="rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-800">
-                Login Siswa
+                Login
             </a>
         @elseif($showRightPlaceholder)
             <div class="w-10 md:w-[120px]"></div>

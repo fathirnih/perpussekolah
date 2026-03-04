@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login Siswa</title>
+    <title>Login</title>
     <style>
         body {
             margin: 0;
@@ -46,7 +46,7 @@
 <body>
     <form class="box" method="POST" action="{{ route('login.siswa.post') }}">
         @csrf
-        <h1>Login Siswa</h1>
+        <h1>Login</h1>
         <p>Gunakan akun yang sudah dibuatkan oleh admin sekolah.</p>
         @if($errors->any())
             <p style="margin-top:-4px; margin-bottom:12px; padding:10px; border-radius:8px; background:#fee2e2; color:#991b1b; font-size:13px;">
