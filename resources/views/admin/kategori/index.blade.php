@@ -5,6 +5,18 @@
     <a href="{{ route('admin.kategori.create') }}" class="rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white">Tambah Kategori</a>
 </div>
 @if(session('success'))<div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{{ session('success') }}</div>@endif
+
+<form id="kategoriSearchForm" method="GET" action="{{ route('admin.kategori.index') }}" class="mb-4 flex justify-end">
+    <input
+        id="kategoriSearchInput"
+        type="text"
+        name="q"
+        value="{{ $q ?? '' }}"
+        placeholder="Search kategori..."
+        class="w-full max-w-md rounded-lg border border-slate-300 px-3 py-2 text-sm"
+    >
+</form>
+
 <div class="overflow-x-auto rounded-xl border bg-white">
     <table class="min-w-full text-sm">
         <thead class="bg-slate-50"><tr><th class="px-4 py-3 text-left">Nama</th><th class="px-4 py-3 text-left">Keterangan</th><th class="px-4 py-3 text-left">Aksi</th></tr></thead>
@@ -17,4 +29,25 @@
         </tbody>
     </table>
 </div>
+<div class="mt-4">{{ $daftarKategori->links() }}</div>
+
+<script>
+    (() => {
+        const form = document.getElementById('kategoriSearchForm');
+        const input = document.getElementById('kategoriSearchInput');
+        if (!form || !input) return;
+
+        let timer = null;
+        let lastValue = input.value;
+        input.addEventListener('input', () => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                const current = input.value;
+                if (current === lastValue) return;
+                lastValue = current;
+                form.submit();
+            }, 900);
+        });
+    })();
+</script>
 @endsection

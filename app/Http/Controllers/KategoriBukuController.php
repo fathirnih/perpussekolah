@@ -10,9 +10,20 @@ class KategoriBukuController extends Controller
 {
     public function index()
     {
-        $daftarKategori = KategoriBuku::latest()->get();
+        $q = trim((string) request()->query('q', ''));
 
-        return view('admin.kategori.index', compact('daftarKategori'));
+        $daftarKategori = KategoriBuku::query()
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($nested) use ($q) {
+                    $nested->where('nama_kategori', 'like', "%{$q}%")
+                        ->orWhere('keterangan', 'like', "%{$q}%");
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.kategori.index', compact('daftarKategori', 'q'));
     }
 
     public function create()
