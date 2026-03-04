@@ -14,11 +14,85 @@ class BukuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $daftarBuku = Buku::with(['kategori', 'rak'])->latest()->get();
+        $q = trim((string) $request->query('q', ''));
+        $penulis = trim((string) $request->query('penulis', ''));
+        $penerbit = trim((string) $request->query('penerbit', ''));
+        $tahun = trim((string) $request->query('tahun', ''));
+        $kategoriId = trim((string) $request->query('kategori_id', ''));
+        $rakId = trim((string) $request->query('rak_id', ''));
 
-        return view('admin.buku.index', compact('daftarBuku'));
+        $daftarPenulis = Buku::query()
+            ->whereNotNull('penulis')
+            ->where('penulis', '!=', '')
+            ->orderBy('penulis')
+            ->distinct()
+            ->pluck('penulis');
+
+        $daftarPenerbit = Buku::query()
+            ->whereNotNull('penerbit')
+            ->where('penerbit', '!=', '')
+            ->orderBy('penerbit')
+            ->distinct()
+            ->pluck('penerbit');
+
+        $daftarTahun = Buku::query()
+            ->whereNotNull('tahun_terbit')
+            ->orderByDesc('tahun_terbit')
+            ->distinct()
+            ->pluck('tahun_terbit');
+
+        $daftarKategori = KategoriBuku::query()
+            ->orderBy('nama_kategori')
+            ->get(['id', 'nama_kategori']);
+
+        $daftarRak = Rak::query()
+            ->orderBy('nomor_rak')
+            ->get(['id', 'nomor_rak']);
+
+        $daftarBuku = Buku::query()
+            ->with(['kategori', 'rak'])
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($nested) use ($q) {
+                    $nested->where('judul', 'like', "%{$q}%")
+                        ->orWhere('kode_buku', 'like', "%{$q}%")
+                        ->orWhere('isbn', 'like', "%{$q}%");
+                });
+            })
+            ->when($penulis !== '', function ($query) use ($penulis) {
+                $query->where('penulis', $penulis);
+            })
+            ->when($penerbit !== '', function ($query) use ($penerbit) {
+                $query->where('penerbit', $penerbit);
+            })
+            ->when($tahun !== '', function ($query) use ($tahun) {
+                $query->where('tahun_terbit', $tahun);
+            })
+            ->when($kategoriId !== '', function ($query) use ($kategoriId) {
+                $query->where('kategori_buku_id', $kategoriId);
+            })
+            ->when($rakId !== '', function ($query) use ($rakId) {
+                $query->where('rak_id', $rakId);
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.buku.index', compact(
+            'daftarBuku',
+            'q',
+            'penulis',
+            'penerbit',
+            'tahun',
+            'kategoriId',
+            'rakId',
+            'daftarPenulis',
+            'daftarPenerbit',
+            'daftarTahun',
+            'daftarKategori',
+            'daftarRak'
+        ));
     }
 
     /**

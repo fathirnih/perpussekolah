@@ -14,6 +14,47 @@
     </div>
 @endif
 
+<form id="bukuFilterForm" method="GET" action="{{ route('admin.buku.index') }}" class="mb-4 grid gap-2 md:grid-cols-3 xl:grid-cols-6">
+    <input
+        id="bukuSearchInput"
+        type="text"
+        name="q"
+        value="{{ $q ?? '' }}"
+        placeholder="Search judul/kode/isbn..."
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm xl:col-span-2"
+    >
+    <select id="bukuPenulisFilter" name="penulis" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+        <option value="">Semua Penulis</option>
+        @foreach(($daftarPenulis ?? []) as $item)
+            <option value="{{ $item }}" @selected(($penulis ?? '') === $item)>{{ $item }}</option>
+        @endforeach
+    </select>
+    <select id="bukuPenerbitFilter" name="penerbit" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+        <option value="">Semua Penerbit</option>
+        @foreach(($daftarPenerbit ?? []) as $item)
+            <option value="{{ $item }}" @selected(($penerbit ?? '') === $item)>{{ $item }}</option>
+        @endforeach
+    </select>
+    <select id="bukuTahunFilter" name="tahun" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+        <option value="">Semua Tahun</option>
+        @foreach(($daftarTahun ?? []) as $item)
+            <option value="{{ $item }}" @selected((string)($tahun ?? '') === (string)$item)>{{ $item }}</option>
+        @endforeach
+    </select>
+    <select id="bukuKategoriFilter" name="kategori_id" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+        <option value="">Semua Kategori</option>
+        @foreach(($daftarKategori ?? []) as $item)
+            <option value="{{ $item->id }}" @selected((string)($kategoriId ?? '') === (string)$item->id)>{{ $item->nama_kategori }}</option>
+        @endforeach
+    </select>
+    <select id="bukuRakFilter" name="rak_id" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+        <option value="">Semua Rak</option>
+        @foreach(($daftarRak ?? []) as $item)
+            <option value="{{ $item->id }}" @selected((string)($rakId ?? '') === (string)$item->id)>{{ $item->nomor_rak }}</option>
+        @endforeach
+    </select>
+</form>
+
 <div class="overflow-x-auto rounded-xl border bg-white">
     <table class="min-w-full text-sm">
         <thead class="bg-slate-50 text-slate-600">
@@ -64,4 +105,33 @@
         </tbody>
     </table>
 </div>
+<div class="mt-4">{{ $daftarBuku->links() }}</div>
+
+<script>
+    (() => {
+        const form = document.getElementById('bukuFilterForm');
+        if (!form) return;
+
+        const search = document.getElementById('bukuSearchInput');
+        const selects = form.querySelectorAll('select');
+        let timer = null;
+        let lastSearchValue = search ? search.value : '';
+
+        if (search) {
+            search.addEventListener('input', () => {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    const current = search.value;
+                    if (current === lastSearchValue) return;
+                    lastSearchValue = current;
+                    form.submit();
+                }, 900);
+            });
+        }
+
+        selects.forEach((select) => {
+            select.addEventListener('change', () => form.submit());
+        });
+    })();
+</script>
 @endsection
