@@ -12,10 +12,22 @@
     <div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{{ session('success') }}</div>
 @endif
 
+<form id="dokumentasiSearchForm" method="GET" action="{{ route('admin.dokumentasi.index') }}" class="mb-4 flex justify-end">
+    <input
+        id="dokumentasiSearchInput"
+        type="text"
+        name="q"
+        value="{{ $q ?? '' }}"
+        placeholder="Search judul/deskripsi..."
+        class="w-full max-w-md rounded-lg border border-slate-300 px-3 py-2 text-sm"
+    >
+</form>
+
 <div class="overflow-x-auto rounded-xl border bg-white">
     <table class="min-w-full text-sm">
         <thead class="bg-slate-50">
             <tr>
+                <th class="px-4 py-3 text-left">No</th>
                 <th class="px-4 py-3 text-left">Foto</th>
                 <th class="px-4 py-3 text-left">Judul</th>
                 <th class="px-4 py-3 text-left">Tanggal</th>
@@ -27,6 +39,7 @@
         <tbody>
         @forelse($daftarDokumentasi as $item)
             <tr class="border-t align-top">
+                <td class="px-4 py-3">{{ $daftarDokumentasi->firstItem() + $loop->index }}</td>
                 <td class="px-4 py-3">
                     @if($item->foto)
                         <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->judul }}" class="h-16 w-24 rounded border object-cover">
@@ -49,6 +62,7 @@
                 <td class="px-4 py-3">{{ $item->urutan }}</td>
                 <td class="px-4 py-3">
                     <div class="flex gap-2">
+                        <a href="{{ route('admin.dokumentasi.show', $item) }}" class="rounded border px-2 py-1">Detail</a>
                         <a href="{{ route('admin.dokumentasi.edit', $item) }}" class="rounded border px-2 py-1">Edit</a>
                         <form method="POST" action="{{ route('admin.dokumentasi.destroy', $item) }}" onsubmit="return confirm('Hapus dokumentasi ini?')">
                             @csrf
@@ -59,9 +73,30 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="6" class="px-4 py-6 text-center text-slate-500">Belum ada dokumentasi kegiatan.</td></tr>
+            <tr><td colspan="7" class="px-4 py-6 text-center text-slate-500">Belum ada dokumentasi kegiatan.</td></tr>
         @endforelse
         </tbody>
     </table>
 </div>
+<div class="mt-4">{{ $daftarDokumentasi->links() }}</div>
+
+<script>
+    (() => {
+        const form = document.getElementById('dokumentasiSearchForm');
+        const input = document.getElementById('dokumentasiSearchInput');
+        if (!form || !input) return;
+
+        let timer = null;
+        let lastValue = input.value;
+        input.addEventListener('input', () => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                const current = input.value;
+                if (current === lastValue) return;
+                lastValue = current;
+                form.submit();
+            }, 900);
+        });
+    })();
+</script>
 @endsection

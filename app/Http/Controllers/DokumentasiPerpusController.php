@@ -9,15 +9,29 @@ use Illuminate\Support\Str;
 
 class DokumentasiPerpusController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $q = trim((string) $request->query('q', ''));
+
         $daftarDokumentasi = DokumentasiPerpus::query()
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($nested) use ($q) {
+                    $nested->where('judul', 'like', "%{$q}%")
+                        ->orWhere('deskripsi', 'like', "%{$q}%");
+                });
+            })
             ->orderByDesc('tanggal_kegiatan')
             ->orderBy('urutan')
             ->latest()
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
-        return view('admin.dokumentasi.index', compact('daftarDokumentasi'));
+        return view('admin.dokumentasi.index', compact('daftarDokumentasi', 'q'));
+    }
+
+    public function show(DokumentasiPerpus $dokumentasi)
+    {
+        return view('admin.dokumentasi.show', compact('dokumentasi'));
     }
 
     public function create()
@@ -29,6 +43,7 @@ class DokumentasiPerpusController extends Controller
     {
         $data = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255'],
             'tanggal_kegiatan' => ['nullable', 'date'],
             'deskripsi' => ['nullable', 'string'],
             'urutan' => ['nullable', 'integer', 'min:0'],
@@ -38,7 +53,7 @@ class DokumentasiPerpusController extends Controller
 
         $data['is_published'] = $request->boolean('is_published');
         $data['urutan'] = (int) ($data['urutan'] ?? 0);
-        $data['slug'] = $this->generateUniqueSlug($data['judul']);
+        $data['slug'] = $this->resolveSlug($data['slug'] ?? null, $data['judul']);
 
         if ($request->hasFile('foto')) {
             $data['foto'] = $request->file('foto')->store('dokumentasi-perpus', 'public');
@@ -58,6 +73,7 @@ class DokumentasiPerpusController extends Controller
     {
         $data = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255'],
             'tanggal_kegiatan' => ['nullable', 'date'],
             'deskripsi' => ['nullable', 'string'],
             'urutan' => ['nullable', 'integer', 'min:0'],
@@ -67,7 +83,7 @@ class DokumentasiPerpusController extends Controller
 
         $data['is_published'] = $request->boolean('is_published');
         $data['urutan'] = (int) ($data['urutan'] ?? 0);
-        $data['slug'] = $this->generateUniqueSlug($data['judul'], $dokumentasi->id);
+        $data['slug'] = $this->resolveSlug($data['slug'] ?? null, $data['judul'], $dokumentasi->id);
 
         if ($request->hasFile('foto')) {
             if ($dokumentasi->foto) {
@@ -111,5 +127,12 @@ class DokumentasiPerpusController extends Controller
         }
 
         return $slug;
+    }
+
+    private function resolveSlug(?string $requestedSlug, string $title, ?int $ignoreId = null): string
+    {
+        $candidate = trim((string) $requestedSlug) !== '' ? (string) $requestedSlug : $title;
+
+        return $this->generateUniqueSlug($candidate, $ignoreId);
     }
 }

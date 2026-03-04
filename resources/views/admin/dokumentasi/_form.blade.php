@@ -8,6 +8,11 @@
         <label class="mb-1 block text-sm font-medium">Judul Kegiatan</label>
         <input name="judul" value="{{ old('judul', $dokumentasi->judul ?? '') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2" required>
     </div>
+    <div class="md:col-span-2">
+        <label class="mb-1 block text-sm font-medium">Slug</label>
+        <input name="slug" value="{{ old('slug', $dokumentasi->slug ?? '') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="contoh-kegiatan-literasi">
+        <p class="mt-1 text-xs text-slate-500">Kosongkan jika ingin dibuat otomatis dari judul.</p>
+    </div>
     <div>
         <label class="mb-1 block text-sm font-medium">Tanggal Kegiatan</label>
         <input type="date" name="tanggal_kegiatan" value="{{ old('tanggal_kegiatan', isset($dokumentasi) && $dokumentasi->tanggal_kegiatan ? $dokumentasi->tanggal_kegiatan->format('Y-m-d') : '') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">

@@ -78,6 +78,7 @@ Route::middleware('internal.role:admin')->group(function () {
     Route::get('/admin/peminjaman/{peminjaman}/edit', [AdminPeminjamanController::class, 'edit'])->name('admin.peminjaman.edit');
     Route::put('/admin/peminjaman/{peminjaman}', [AdminPeminjamanController::class, 'update'])->name('admin.peminjaman.update');
     Route::delete('/admin/peminjaman/{peminjaman}', [AdminPeminjamanController::class, 'destroy'])->name('admin.peminjaman.destroy');
+    Route::get('/admin/dokumentasi/{dokumentasi}/detail', [DokumentasiPerpusController::class, 'show'])->name('admin.dokumentasi.show');
     Route::resource('/admin/dokumentasi', DokumentasiPerpusController::class)
         ->except(['show'])
         ->parameters(['dokumentasi' => 'dokumentasi'])
