@@ -6,6 +6,18 @@
 </div>
 @if(session('success'))<div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{{ session('success') }}</div>@endif
 @if(session('error'))<div class="mb-4 rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">{{ session('error') }}</div>@endif
+
+<form id="kelasSearchForm" method="GET" action="{{ route('admin.kelas.index') }}" class="mb-4 flex justify-end">
+    <input
+        id="kelasSearchInput"
+        type="text"
+        name="q"
+        value="{{ $q ?? '' }}"
+        placeholder="Search nama kelas..."
+        class="w-full max-w-md rounded-lg border border-slate-300 px-3 py-2 text-sm"
+    >
+</form>
+
 <div class="overflow-x-auto rounded-xl border bg-white">
     <table class="min-w-full text-sm">
         <thead class="bg-slate-50"><tr><th class="px-4 py-3 text-left">ID</th><th class="px-4 py-3 text-left">Nama Kelas</th><th class="px-4 py-3 text-left">Aksi</th></tr></thead>
@@ -30,5 +42,25 @@
         </tbody>
     </table>
 </div>
-@endsection
+<div class="mt-4">{{ $daftarKelas->links() }}</div>
 
+<script>
+    (() => {
+        const form = document.getElementById('kelasSearchForm');
+        const input = document.getElementById('kelasSearchInput');
+        if (!form || !input) return;
+
+        let timer = null;
+        let lastValue = input.value;
+        input.addEventListener('input', () => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                const current = input.value;
+                if (current === lastValue) return;
+                lastValue = current;
+                form.submit();
+            }, 900);
+        });
+    })();
+</script>
+@endsection

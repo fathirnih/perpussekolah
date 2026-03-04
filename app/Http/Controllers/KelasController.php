@@ -10,9 +10,17 @@ class KelasController extends Controller
 {
     public function index()
     {
-        $daftarKelas = Kelas::query()->latest()->get();
+        $q = trim((string) request()->query('q', ''));
 
-        return view('admin.kelas.index', compact('daftarKelas'));
+        $daftarKelas = Kelas::query()
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where('nama_kelas', 'like', "%{$q}%");
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.kelas.index', compact('daftarKelas', 'q'));
     }
 
     public function create()
@@ -58,4 +66,3 @@ class KelasController extends Controller
         return redirect()->route('admin.kelas.index')->with('success', 'Kelas berhasil dihapus.');
     }
 }
-
