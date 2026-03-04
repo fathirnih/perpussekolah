@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\DokumentasiPerpusController;
 use App\Http\Controllers\InternalAuthController;
+use App\Http\Controllers\KelasController;
 use App\Http\Controllers\KategoriBukuController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\PetugasDashboardController;
@@ -66,6 +67,7 @@ Route::middleware('internal.role:admin')->group(function () {
         ->parameters(['petugas' => 'petugas'])
         ->names('admin.petugas');
     Route::resource('/admin/siswa', SiswaController::class)->except(['show'])->names('admin.siswa');
+    Route::resource('/admin/kelas', KelasController::class)->except(['show'])->names('admin.kelas');
     Route::resource('/admin/kategori-buku', KategoriBukuController::class)->except(['show'])->names('admin.kategori');
     Route::resource('/admin/rak', RakController::class)->except(['show'])->names('admin.rak');
     Route::resource('/admin/buku', BukuController::class)->names('admin.buku');
