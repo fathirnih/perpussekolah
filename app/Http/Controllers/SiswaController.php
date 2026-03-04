@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelas;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 
@@ -9,14 +10,16 @@ class SiswaController extends Controller
 {
     public function index()
     {
-        $daftarSiswa = Siswa::latest()->get();
+        $daftarSiswa = Siswa::with('kelas')->latest()->get();
 
         return view('admin.siswa.index', compact('daftarSiswa'));
     }
 
     public function create()
     {
-        return view('admin.siswa.create');
+        $daftarKelas = Kelas::query()->orderBy('nama_kelas')->get(['id', 'nama_kelas']);
+
+        return view('admin.siswa.create', compact('daftarKelas'));
     }
 
     public function store(Request $request)
@@ -24,7 +27,7 @@ class SiswaController extends Controller
         $data = $request->validate([
             'nisn' => ['required', 'digits:10', 'unique:siswa,nisn'],
             'nama' => ['required', 'string', 'max:255'],
-            'kelas' => ['required', 'string', 'max:50'],
+            'kelas_id' => ['required', 'integer', 'exists:kelas,id'],
             'email' => ['nullable', 'email', 'max:255', 'unique:siswa,email'],
             'password' => ['nullable', 'string', 'min:6'],
             'is_registered' => ['nullable', 'boolean'],
@@ -40,7 +43,9 @@ class SiswaController extends Controller
 
     public function edit(Siswa $siswa)
     {
-        return view('admin.siswa.edit', compact('siswa'));
+        $daftarKelas = Kelas::query()->orderBy('nama_kelas')->get(['id', 'nama_kelas']);
+
+        return view('admin.siswa.edit', compact('siswa', 'daftarKelas'));
     }
 
     public function update(Request $request, Siswa $siswa)
@@ -48,7 +53,7 @@ class SiswaController extends Controller
         $data = $request->validate([
             'nisn' => ['required', 'digits:10', 'unique:siswa,nisn,' . $siswa->id],
             'nama' => ['required', 'string', 'max:255'],
-            'kelas' => ['required', 'string', 'max:50'],
+            'kelas_id' => ['required', 'integer', 'exists:kelas,id'],
             'email' => ['nullable', 'email', 'max:255', 'unique:siswa,email,' . $siswa->id],
             'password' => ['nullable', 'string', 'min:6'],
             'is_registered' => ['nullable', 'boolean'],

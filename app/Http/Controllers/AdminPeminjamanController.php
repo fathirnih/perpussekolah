@@ -37,7 +37,10 @@ class AdminPeminjamanController extends Controller
 
     public function create()
     {
-        $daftarSiswa = Siswa::query()->orderBy('nama')->get(['id', 'nama', 'kelas']);
+        $daftarSiswa = Siswa::query()
+            ->with('kelas:id,nama_kelas')
+            ->orderBy('nama')
+            ->get(['id', 'nama', 'kelas_id']);
         $daftarPetugas = Petugas::query()->orderBy('nama')->get(['id', 'nama']);
         $daftarBuku = Buku::query()
             ->orderBy('judul')
@@ -60,7 +63,10 @@ class AdminPeminjamanController extends Controller
     public function edit(Peminjaman $peminjaman)
     {
         $peminjaman->load('detailPeminjaman');
-        $daftarSiswa = Siswa::query()->orderBy('nama')->get(['id', 'nama', 'kelas']);
+        $daftarSiswa = Siswa::query()
+            ->with('kelas:id,nama_kelas')
+            ->orderBy('nama')
+            ->get(['id', 'nama', 'kelas_id']);
         $daftarPetugas = Petugas::query()->orderBy('nama')->get(['id', 'nama']);
         $daftarBuku = Buku::query()
             ->orderBy('judul')

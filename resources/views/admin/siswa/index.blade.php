@@ -10,7 +10,7 @@
         <thead class="bg-slate-50"><tr><th class="px-4 py-3 text-left">NISN</th><th class="px-4 py-3 text-left">Nama</th><th class="px-4 py-3 text-left">Kelas</th><th class="px-4 py-3 text-left">Aksi</th></tr></thead>
         <tbody>
         @forelse($daftarSiswa as $item)
-            <tr class="border-t"><td class="px-4 py-3">{{ $item->nisn }}</td><td class="px-4 py-3">{{ $item->nama }}</td><td class="px-4 py-3">{{ $item->kelas }}</td><td class="px-4 py-3"><div class="flex gap-2"><a href="{{ route('admin.siswa.edit', $item) }}" class="rounded border px-2 py-1">Edit</a><form method="POST" action="{{ route('admin.siswa.destroy', $item) }}" onsubmit="return confirm('Hapus siswa ini?')">@csrf @method('DELETE')<button class="rounded border border-rose-200 bg-rose-50 px-2 py-1 text-rose-700">Hapus</button></form></div></td></tr>
+            <tr class="border-t"><td class="px-4 py-3">{{ $item->nisn }}</td><td class="px-4 py-3">{{ $item->nama }}</td><td class="px-4 py-3">{{ $item->kelas->nama_kelas ?? '-' }}</td><td class="px-4 py-3"><div class="flex gap-2"><a href="{{ route('admin.siswa.edit', $item) }}" class="rounded border px-2 py-1">Edit</a><form method="POST" action="{{ route('admin.siswa.destroy', $item) }}" onsubmit="return confirm('Hapus siswa ini?')">@csrf @method('DELETE')<button class="rounded border border-rose-200 bg-rose-50 px-2 py-1 text-rose-700">Hapus</button></form></div></td></tr>
         @empty
             <tr><td class="px-4 py-6 text-center text-slate-500" colspan="4">Belum ada data siswa.</td></tr>
         @endforelse

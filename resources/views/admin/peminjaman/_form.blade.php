@@ -47,7 +47,7 @@
                 <option value="">Pilih siswa</option>
                 @foreach($daftarSiswa as $siswa)
                     <option value="{{ $siswa->id }}" @selected((string) old('siswa_id', $base->siswa_id ?? '') === (string) $siswa->id)>
-                        {{ $siswa->nama }} ({{ $siswa->kelas ?: '-' }})
+                        {{ $siswa->nama }} ({{ $siswa->kelas->nama_kelas ?? '-' }})
                     </option>
                 @endforeach
             </select>
@@ -200,4 +200,3 @@
         }
     })();
 </script>
-

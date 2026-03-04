@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelas;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,9 +12,10 @@ class SiswaProfileController extends Controller
     public function edit(Request $request)
     {
         $auth = $request->session()->get('siswa_auth');
-        $siswa = Siswa::findOrFail($auth['id']);
+        $siswa = Siswa::with('kelas')->findOrFail($auth['id']);
+        $daftarKelas = Kelas::query()->orderBy('nama_kelas')->get(['id', 'nama_kelas']);
 
-        return view('siswa.profil', compact('siswa', 'auth'));
+        return view('siswa.profil', compact('siswa', 'auth', 'daftarKelas'));
     }
 
     public function update(Request $request)
@@ -23,7 +25,7 @@ class SiswaProfileController extends Controller
 
         $data = $request->validate([
             'nama' => ['required', 'string', 'max:255'],
-            'kelas' => ['required', 'string', 'max:50'],
+            'kelas_id' => ['required', 'integer', 'exists:kelas,id'],
             'email' => ['nullable', 'email', 'max:255', 'unique:siswa,email,' . $siswa->id],
             'no_hp' => ['nullable', 'string', 'max:25'],
             'alamat' => ['nullable', 'string'],
@@ -44,13 +46,14 @@ class SiswaProfileController extends Controller
         }
 
         $siswa->update($data);
+        $siswa->load('kelas');
 
         $request->session()->put('siswa_auth', [
             'id' => $siswa->id,
             'nama' => $siswa->nama,
             'nisn' => $siswa->nisn,
             'email' => $siswa->email,
-            'kelas' => $siswa->kelas,
+            'kelas' => $siswa->kelas->nama_kelas ?? '-',
         ]);
 
         return back()->with('success', 'Profil siswa berhasil diperbarui.');

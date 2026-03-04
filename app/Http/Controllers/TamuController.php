@@ -226,12 +226,14 @@ class TamuController extends Controller
         if (
             Schema::hasTable('peminjaman')
             && Schema::hasTable('siswa')
+            && Schema::hasTable('kelas')
             && Schema::hasTable('detail_peminjaman')
             && Schema::hasTable('buku')
             && Schema::hasTable('kategori_buku')
         ) {
             $topPeminjam = DB::table('peminjaman')
                 ->join('siswa', 'siswa.id', '=', 'peminjaman.siswa_id')
+                ->leftJoin('kelas', 'kelas.id', '=', 'siswa.kelas_id')
                 ->join('detail_peminjaman', 'detail_peminjaman.peminjaman_id', '=', 'peminjaman.id')
                 ->join('buku', 'buku.id', '=', 'detail_peminjaman.buku_id')
                 ->leftJoin('kategori_buku', 'kategori_buku.id', '=', 'buku.kategori_buku_id')
@@ -244,12 +246,12 @@ class TamuController extends Controller
                 ->select(
                     'siswa.id',
                     'siswa.nama',
-                    'siswa.kelas',
+                    'kelas.nama_kelas as kelas',
                     'siswa.foto_profil',
                     DB::raw('SUM(detail_peminjaman.qty) as total_peminjaman'),
                     DB::raw('MAX(detail_peminjaman.tanggal_kembali) as terakhir_meminjam')
                 )
-                ->groupBy('siswa.id', 'siswa.nama', 'siswa.kelas', 'siswa.foto_profil')
+                ->groupBy('siswa.id', 'siswa.nama', 'kelas.nama_kelas', 'siswa.foto_profil')
                 ->orderByDesc('total_peminjaman')
                 ->orderByDesc('terakhir_meminjam')
                 ->limit(3)

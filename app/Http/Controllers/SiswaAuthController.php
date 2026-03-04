@@ -17,7 +17,7 @@ class SiswaAuthController extends Controller
 
         $identifier = trim($credentials['identifier']);
 
-        $siswa = Siswa::where('nisn', $identifier)
+        $siswa = Siswa::with('kelas')->where('nisn', $identifier)
             ->orWhere('email', $identifier)
             ->first();
 
@@ -32,7 +32,7 @@ class SiswaAuthController extends Controller
             'nama' => $siswa->nama,
             'nisn' => $siswa->nisn,
             'email' => $siswa->email,
-            'kelas' => $siswa->kelas,
+            'kelas' => $siswa->kelas->nama_kelas ?? '-',
         ]);
 
         return redirect()->route('siswa.dashboard');

@@ -15,7 +15,7 @@ class Siswa extends Authenticatable
     protected $fillable = [
         'nisn',
         'nama',
-        'kelas',
+        'kelas_id',
         'email',
         'password',
         'is_registered',
@@ -49,5 +49,10 @@ class Siswa extends Authenticatable
     public function peminjaman()
     {
         return $this->hasMany(Peminjaman::class, 'siswa_id');
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas_id');
     }
 }
